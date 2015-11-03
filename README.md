@@ -1,6 +1,6 @@
 # Ethernet Sniffer
 
-by Luke Neumann, Brian Rieder, and Subhav Ramachandran
+by Caitlin Cowden, Shaughan Gladden, and Brian Rieder
 
 Ethernet sniffer and packet flagger designed for tandem Cyclone V FPGA and Atom microprocessor on the Terasic DE2i-150 Rev. C board
 
