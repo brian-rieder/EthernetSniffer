@@ -3,13 +3,15 @@
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
-// Description: result_address_fsm
+// Description: Determines the write location for the output FIFO. Output addresses are
+//              determined via hard-coding and are rotated when written to (per the
+//              inc_addr trigger).
 
 module result_address_fsm
 (
   // port declaration
-  input inc_addr,
-  output [32:0] addr_out
+  input reg inc_addr,
+  output reg [32:0] addr_out
 );
 
 typedef enum logic [2:0] {
@@ -50,8 +52,10 @@ end
 always_ff @ (posedge clk, negedge n_rst) begin
   if (n_rst == 0) begin
     state <= ADDR_1;
+    addr_out <= 32'b0;
   end else begin
     state <= nextstate;
+    addr_out <= next_addr_out;
   end
 end
 
