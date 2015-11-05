@@ -17,5 +17,11 @@ default.svf
 *.alib
 *.bak
 *.BAK
-covhtmlreport/
 #*#
+*.tcl
+mapped
+mapped/*
+*.wlf
+Questions
+report.txt
+*.swp
