@@ -60,24 +60,25 @@ always_ff @ (posedge clk, negedge n_rst) begin
 end
 
 // OUTPUT ASSIGNMENT
-// TODO: populate these addresses to not be null -- bpr
+// TODO: populate these addresses to be less arbitrary -- bpr
+// note: the current values are multiples of 1550
 always_comb begin
   next_addr_out = addr_out;
   case(nextstate)
     ADDR1: begin
-      next_addr_out = 32'b0;
+      next_addr_out = 32'h0000;
     end
     ADDR2: begin
-      next_addr_out = 32'b0;
+      next_addr_out = 32'h060E;
     end
     ADDR3: begin
-      next_addr_out = 32'b0;
+      next_addr_out = 32'h0C1C;
     end
     ADDR4: begin
-      next_addr_out = 32'b0;
+      next_addr_out = 32'h122A;
     end
     ADDR5: begin
-      next_addr_out = 32'b0;
+      next_addr_out = 32'h1838;
     end
   endcase
 end
