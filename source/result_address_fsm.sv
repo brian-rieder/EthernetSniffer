@@ -11,7 +11,8 @@ module result_address_fsm
 (
   // port declaration
   input reg inc_addr,
-  output reg [32:0] addr_out
+  output reg [32:0] addr_out,
+  output reg write_enable
 );
 
 typedef enum logic [2:0] {
@@ -19,7 +20,7 @@ typedef enum logic [2:0] {
 } state_type;
 
 state_type state, nextstate;
-reg next_addr_out;
+reg next_addr_out, next_write_enable;
 
 // NEXT STATE ASSIGNMENT
 always_comb begin
@@ -53,9 +54,11 @@ always_ff @ (posedge clk, negedge n_rst) begin
   if (n_rst == 0) begin
     state <= ADDR_1;
     addr_out <= 32'b0;
+    write_enable <= 1'b0;
   end else begin
     state <= nextstate;
     addr_out <= next_addr_out;
+    write_enable <= next_write_enable;
   end
 end
 
@@ -66,21 +69,23 @@ always_comb begin
   next_addr_out = addr_out;
   case(nextstate)
     ADDR1: begin
-      next_addr_out = 32'h0000;
+      next_addr_out = 32'h0000; // 0
     end
     ADDR2: begin
-      next_addr_out = 32'h060E;
+      next_addr_out = 32'h060E; // 1550
     end
     ADDR3: begin
-      next_addr_out = 32'h0C1C;
+      next_addr_out = 32'h0C1C; // 3100
     end
     ADDR4: begin
-      next_addr_out = 32'h122A;
+      next_addr_out = 32'h122A; // 4250
     end
     ADDR5: begin
-      next_addr_out = 32'h1838;
+      next_addr_out = 32'h1838; // 5800
     end
   endcase
+  next_write_enable = (state != nextstate);
 end
+
 
 endmodule
