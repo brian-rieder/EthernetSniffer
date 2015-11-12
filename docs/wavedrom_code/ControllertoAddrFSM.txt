@@ -1,0 +1,11 @@
+{ signal: [
+    {   name: 'clk', wave: 'P....|.....|...',period:1},
+ 	['Nominal',
+      //Controller to Result Address FSM
+     {name: 'inc_addr', wave:'0.10.|.10..|...'},
+     {name: 'addr', wave:  'xxx2.|..2..|..x',
+      data:['address', 'address']}
+ 	],
+    ],
+     config: { hscale: 1,skin:'narrow' },
+}
