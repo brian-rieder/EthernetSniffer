@@ -1,5 +1,5 @@
 // File name:   rx_fifo.sv
-// Created:     6 October 2015
+// Updated:     6 October 2015
 // Author:      Brian Rieder
 // Description: FIFO Block
 

@@ -1,5 +1,5 @@
 // File name:   avalon_slave_controller.sv
-// Created:     05 November 2015
+// Updated:     05 November 2015
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
