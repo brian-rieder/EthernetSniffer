@@ -1,0 +1,16 @@
+{ signal: [
+    {   name: 'clk', wave: 'P...........|.................',period:1},
+ 	['Nominal',
+      //MAC to Controller
+     {name: 'sop', wave:'0.10........|.................'},
+     {name: 'eop', wave:  '0...........|.............10..'},
+     {name: 'empty',  wave: '1.0.........|..............1..'},
+     {name: 'err',  wave: '0...........|.................'},
+     {name: 'valid',  wave:'0.1.........|..............0..'},
+     {name: 'ready',  wave:'01..........|.................'},
+     {name: 'data', wave: 'xxx2........|.............xxxx',
+      data:['    <=1550 Bytes']}
+ 	],
+    ],
+     config: { hscale: 1,skin:'narrow' },
+}
