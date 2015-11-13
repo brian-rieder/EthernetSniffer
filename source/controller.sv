@@ -26,4 +26,83 @@ typedef enum logic [3:0] {
 
 state_type state, nextstate;
 
+// NEXT STATE ASSIGNMENT
+always_comb begin
+  nextstate = state;
+  case(state)
+    RESET: begin
+
+    end
+    LOAD_COMP_REG: begin
+
+    end
+    IDLE: begin
+
+    end
+    LOAD_INPUT_FIFO: begin
+
+    end
+    LOAD_COMPARATORS: begin
+
+    end
+    COMPARE_CONTENTS: begin
+
+    end
+    MATCH_FOUND: begin
+
+    end
+    LOAD_MEMORY: begin
+
+    end
+    ERROR: begin
+
+    end
+  endcase
+end
+
+// STATE REGISTERING
+always_ff @ (posedge clk, negedge n_rst) begin
+  if (n_rst == 0) begin
+    state <= RESET;
+
+  end else begin
+    state <= nextstate;
+
+  end
+end
+
+// OUTPUT ASSIGNMENT
+always_comb begin
+  case(nextstate)
+    RESET: begin
+
+    end
+    LOAD_COMP_REG: begin
+
+    end
+    IDLE: begin
+
+    end
+    LOAD_INPUT_FIFO: begin
+
+    end
+    LOAD_COMPARATORS: begin
+
+    end
+    COMPARE_CONTENTS: begin
+
+    end
+    MATCH_FOUND: begin
+
+    end
+    LOAD_MEMORY: begin
+
+    end
+    ERROR: begin
+
+    end
+
+  endcase
+end
+
 endmodule
