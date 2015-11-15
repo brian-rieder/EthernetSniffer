@@ -1,5 +1,5 @@
 // File name:   result_address_fsm.sv
-// Created:     05 November 2015
+// Updated:     12 November 2015
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
@@ -15,8 +15,8 @@ module result_address_fsm
   output reg write_enable
 );
 
-typedef enum logic [2:0] {
-  ADDR1, ADDR2, ADDR3, ADDR4, ADDR5
+typedef enum logic [3:0] {
+  ADDR1, IDLE1, ADDR2, IDLE2, ADDR3, IDLE3, ADDR4, IDLE4, ADDR5, IDLE5
 } state_type;
 
 state_type state, nextstate;
@@ -27,22 +27,37 @@ always_comb begin
   nextstate = state;
   case(state)
     ADDR1: begin
+      nextstate = IDLE1;
+    end
+    IDLE1: begin
       if (inc_addr == 1'b1)
         nextstate = ADDR2;
     end
     ADDR2: begin
+      nextstate = IDLE2;
+    end
+    IDLE2: begin
       if (inc_addr == 1'b1)
         nextstate = ADDR3;
     end
     ADDR3: begin 
+      nextstate = IDLE3;
+    end
+    IDLE3: begin
       if (inc_addr == 1'b1)
         nextstate = ADDR4;
     end
     ADDR4: begin 
+      nextstate = IDLE4;
+    end
+    IDLE4: begin
       if (inc_addr == 1'b1)
         nextstate = ADDR5;
     end
     ADDR5: begin 
+      nextstate = IDLE5;
+    end
+    IDLE5: begin
       if (inc_addr == 1'b1)
         nextstate = ADDR1;
     end
@@ -70,21 +85,45 @@ always_comb begin
   case(nextstate)
     ADDR1: begin
       next_addr_out = 32'h0000; // 0
+      next_write_enable = 1;
+    end
+    IDLE1: begin
+      next_addr_out = 32'h0000; // 0
+      next_write_enable = 0;
     end
     ADDR2: begin
       next_addr_out = 32'h060E; // 1550
+      next_write_enable = 1;
+    end
+    IDLE2: begin
+      next_addr_out = 32'h060E; // 1550
+      next_write_enable = 0;
     end
     ADDR3: begin
       next_addr_out = 32'h0C1C; // 3100
+      next_write_enable = 1;
+    end
+    IDLE3: begin
+      next_addr_out = 32'h0C1C; // 3100
+      next_write_enable = 0;
     end
     ADDR4: begin
       next_addr_out = 32'h122A; // 4250
+      next_write_enable = 1;
+    end
+    IDLE4: begin
+      next_addr_out = 32'h122A; // 4250
+      next_write_enable = 0;
     end
     ADDR5: begin
       next_addr_out = 32'h1838; // 5800
+      next_write_enable = 1;
+    end
+    IDLE5: begin
+      next_addr_out = 32'h1838; // 5800
+      next_write_enable = 0;
     end
   endcase
-  next_write_enable = (state != nextstate);
 end
 
 
