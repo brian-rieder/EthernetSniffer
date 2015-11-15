@@ -11,6 +11,8 @@ module comparator
 )
 (
   // port declaration
+  input wire [31:0]data
+  output wire [31:0]data
 );
 
 endmodule
