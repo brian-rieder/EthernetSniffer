@@ -11,7 +11,7 @@ module controller
 (
   // port declaration
   input wire clk,
-  input wire [32:0] data_in,
+  input wire [31:0] data_in,
   input wire match,
   input wire shift_enable,
   output wire rdreq,
@@ -31,8 +31,9 @@ always_comb begin
   nextstate = state;
   case(state)
     RESET: begin
-
+      nextstate = LOAD_COMP_REG;
     end
+    
     LOAD_COMP_REG: begin
 
     end
@@ -58,17 +59,6 @@ always_comb begin
 
     end
   endcase
-end
-
-// STATE REGISTERING
-always_ff @ (posedge clk, negedge n_rst) begin
-  if (n_rst == 0) begin
-    state <= RESET;
-
-  end else begin
-    state <= nextstate;
-
-  end
 end
 
 // OUTPUT ASSIGNMENT
@@ -105,4 +95,14 @@ always_comb begin
   endcase
 end
 
+// STATE REGISTERING
+always_ff @ (posedge clk, negedge n_rst) begin
+  if (n_rst == 0) begin
+    state <= RESET;
+
+  end else begin
+    state <= nextstate;
+
+  end
+end
 endmodule
