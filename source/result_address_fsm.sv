@@ -10,6 +10,8 @@
 module result_address_fsm
 (
   // port declaration
+  input wire clk,
+  input wire n_rst,
   input reg inc_addr,
   output reg [32:0] addr_out,
   output reg write_enable
