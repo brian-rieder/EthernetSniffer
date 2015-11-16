@@ -22,7 +22,8 @@ typedef enum logic [3:0] {
 } state_type;
 
 state_type state, nextstate;
-reg next_addr_out, next_write_enable;
+reg [31:0] next_addr_out;
+reg next_write_enable;
 
 // NEXT STATE ASSIGNMENT
 always_comb begin
