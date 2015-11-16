@@ -69,7 +69,7 @@ end
 // STATE REGISTERING
 always_ff @ (posedge clk, negedge n_rst) begin
   if (n_rst == 0) begin
-    state <= ADDR_1;
+    state <= ADDR1;
     addr_out <= 32'b0;
     write_enable <= 1'b0;
   end else begin
