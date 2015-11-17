@@ -21,7 +21,7 @@ fi
 todays_date=$(date +'%d %B %Y')
 
 echo "// File name:   $module_name.sv
-// Created:     $todays_date
+// Updated:     $todays_date
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
