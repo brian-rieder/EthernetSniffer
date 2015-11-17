@@ -31,6 +31,7 @@ state_type state, next_state;
 reg next_rdreq, next_read, next_inc_addr, next_addr
 
 // NEXT STATE ASSIGNMENT
+// State diagram must be updated to reflect new flags
 always_comb begin
   next_state = state;
   
@@ -95,6 +96,7 @@ always_comb begin
 end
 
 // OUTPUT ASSIGNMENT
+// Flags need to be changed
 always_comb begin
   next_rdreq = rdreq;
   next_read = read;
