@@ -16,6 +16,7 @@ module controller
   input wire update_done,
   input wire eop,
   input wire error,
+  input wire fifo_eop,
   output reg rdreq,
   output reg read,
   output reg inc_addr,
@@ -61,19 +62,28 @@ always_comb begin
     end
     
     LOAD_COMPARATORS: begin
-
+      if(fifo_eop) begin
+        next_state = COMPARE_CONTENTS;
+      end
     end
     
     COMPARE_CONTENTS: begin
-
+      if(comp_done) begin
+        next_state = MATCH_FOUND;
+      end
     end
     
     MATCH_FOUND: begin
-
+      if(match) begin
+        next_state = LOAD_MEMORY;
+      end
+      else begin
+        next_state = IDLE;
+      end
     end
     
     LOAD_MEMORY: begin
-
+      next_state = IDLE;
     end
     
     ERROR: begin
