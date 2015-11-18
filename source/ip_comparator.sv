@@ -29,10 +29,7 @@ always_ff @ (posedge clk, negedge n_rst) begin
   end else begin
     a1 <= data_in;
     a2 <= a1;
-    a3 <= a2;
-    a4 <= a3;
-    a5 <= a4;
-    data_out <= a5;
+    data_out <= a2;
   end
 end
 
