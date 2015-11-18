@@ -11,14 +11,14 @@ module tb_ip_comparator();
 
 reg clk;
 reg n_rst;
+reg [31:0] tb_ip_in;
 reg [31:0] data_in;
 reg [31:0] data_out;
 
 reg [31:0] expected_data_out;
 
-ip_comparator COMP(.clk, .n_rst, .data_in, .data_out);
+ip_comparator COMP(.clk, .n_rst, .data_in, .data_out, .ip_in(tb_ip_in));
 
-//CHECK THIS?
 localparam CLK_PERIOD = 10;
 
 //Clock generation block
@@ -34,12 +34,14 @@ clocking cb @(posedge clk);
 	default input #1step output #100ps;
 	output #800ps n_rst = n_rst;
 	output datai = data_in;
+	output ipin = tb_ip_in;
 	input datao = data_out;
 endclocking
 
 initial
 begin
-
+	tb_ip_in = 32'hC0A80101; //192.168.001.001
+	$info(tb_ip_in);
 	data_in = 0;
 	cb.n_rst <= 1'b1;
 
