@@ -16,19 +16,18 @@ module controller
   input wire update_done,
   input wire eop,
   input wire error,
-  input wire fifo_eop,
+  input wire rdempty,
   output reg rdreq,
-  output reg read,
   output reg inc_addr,
   output reg addr
 );
 
 typedef enum logic [3:0] {
-  RESET, LOAD_COMP_REG, IDLE, LOAD_INPUT_FIFO, LOAD_COMPARATORS, COMPARE_CONTENTS, MATCH_FOUND, LOAD_MEMORY, ERROR  
+  RESET, LOAD_COMP_REG, IDLE, LOAD_INPUT_FIFO, COMPARE, MATCH_FOUND, LOAD_MEMORY, ERROR  
 } state_type;
 
 state_type state, next_state;
-reg next_rdreq, next_read, next_inc_addr, next_addr
+reg next_rdreq, next_inc_addr, next_addr
 
 // NEXT STATE ASSIGNMENT
 // State diagram must be updated to reflect new flags
@@ -54,7 +53,7 @@ always_comb begin
     
     LOAD_INPUT_FIFO: begin
       if(eop) begin
-        next_state = LOAD_COMPARATORS;
+        next_state = COMPARE;
       end
       
       else if(error) begin
@@ -62,14 +61,8 @@ always_comb begin
       end
     end
     
-    LOAD_COMPARATORS: begin
-      if(fifo_eop) begin
-        next_state = COMPARE_CONTENTS;
-      end
-    end
-    
-    COMPARE_CONTENTS: begin
-      if(comp_done) begin
+    COMPARE: begin
+      if(rdempty) begin
         next_state = MATCH_FOUND;
       end
     end
@@ -99,7 +92,6 @@ end
 // Flags need to be changed
 always_comb begin
   next_rdreq = rdreq;
-  next_read = read;
   next_inc_addr = inc_addr;
   next_addr = addr;
   
@@ -110,58 +102,50 @@ always_comb begin
     
     LOAD_COMP_REG: begin
       next_rdreq = 0;
-      next_read = 0;
       next_inc_addr = 0;
       next_addr = 1;
     end
     
     IDLE: begin
       next_rdreq = 0;
-      next_read = 0;
       next_inc_addr = 0;
-      next_addr = 1;
+      next_addr = 0;
     end
     
     LOAD_INPUT_FIFO: begin
-      next_rdreq = 0;
-      next_read = 0;
+      next_rdreq = 1;
       next_inc_addr = 0;
-      next_addr = 1;
+      next_addr = 0;
     end
     
     LOAD_COMPARATORS: begin
       next_rdreq = 0;
-      next_read = 0;
       next_inc_addr = 0;
-      next_addr = 1;
+      next_addr = 0;
     end
     
     COMPARE_CONTENTS: begin
       next_rdreq = 0;
-      next_read = 0;
       next_inc_addr = 0;
-      next_addr = 1;
+      next_addr = 0;
     end
     
     MATCH_FOUND: begin
       next_rdreq = 0;
-      next_read = 0;
-      next_inc_addr = 0;
-      next_addr = 1;
+      next_inc_addr = 1;
+      next_addr = 0;
     end
     
     LOAD_MEMORY: begin
       next_rdreq = 0;
-      next_read = 0;
       next_inc_addr = 0;
-      next_addr = 1;
+      next_addr = 0;
     end
     
     ERROR: begin
       next_rdreq = 0;
-      next_read = 0;
       next_inc_addr = 0;
-      next_addr = 1;
+      next_addr = 0;
     end
   endcase
 end
@@ -171,7 +155,6 @@ always_ff @ (posedge clk, negedge n_rst) begin
   if (!n_rst) begin
     state <= RESET;
     next_rdreq <= 0;
-    next_read <= 0;
     next_inc_addr <= 0;
     next_addr <= 0;
   end 
@@ -179,7 +162,6 @@ always_ff @ (posedge clk, negedge n_rst) begin
   else begin
     state <= next_state;
     rdreq <= next_rdreq;
-    read <= next_read;
     inc_addr <= next_inc_addr;
     addr <= next_addr;
   end
