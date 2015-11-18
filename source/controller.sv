@@ -11,15 +11,17 @@ module controller
 (
   // port declaration
   input wire clk,
-  input wire match,
+  input wire n_rst,
+  input wire match, //match flag from comparators
   input wire shift_enable,
   input wire update_done,
-  input wire eop,
-  input wire error,
-  input wire rdempty,
-  output reg rdreq,
-  output reg inc_addr,
-  output reg addr
+  input wire eop, //eop from MAC
+  input wire error, //error from MAC
+  input wire rdempty, //empty signal from Input FIFO
+  output reg rdreq, //read request signal to Input FIFO
+  output reg wrreq, //write request signal to Input FIFO
+  output reg inc_addr, //signal to address buffer to increment address
+  output reg addr //signal to avalon slave controller
 );
 
 typedef enum logic [3:0] {
@@ -27,7 +29,7 @@ typedef enum logic [3:0] {
 } state_type;
 
 state_type state, next_state;
-reg next_rdreq, next_inc_addr, next_addr
+reg next_rdreq, next_wrreq, next_inc_addr, next_addr
 
 // NEXT STATE ASSIGNMENT
 // State diagram must be updated to reflect new flags
@@ -92,6 +94,7 @@ end
 // Flags need to be changed
 always_comb begin
   next_rdreq = rdreq;
+  next_wrreq = wrreq;
   next_inc_addr = inc_addr;
   next_addr = addr;
   
@@ -102,48 +105,49 @@ always_comb begin
     
     LOAD_COMP_REG: begin
       next_rdreq = 0;
+      next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 1;
     end
     
     IDLE: begin
       next_rdreq = 0;
+      next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 0;
     end
     
     LOAD_INPUT_FIFO: begin
       next_rdreq = 1;
+      next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 0;
     end
     
-    LOAD_COMPARATORS: begin
+    COMPARE: begin
       next_rdreq = 0;
-      next_inc_addr = 0;
-      next_addr = 0;
-    end
-    
-    COMPARE_CONTENTS: begin
-      next_rdreq = 0;
+      next_wrreq = 1;
       next_inc_addr = 0;
       next_addr = 0;
     end
     
     MATCH_FOUND: begin
       next_rdreq = 0;
-      next_inc_addr = 1;
+      next_wrreq = 0;
+      next_inc_addr = 0;
       next_addr = 0;
     end
     
     LOAD_MEMORY: begin
       next_rdreq = 0;
-      next_inc_addr = 0;
+      next_wrreq = 0;
+      next_inc_addr = 1;
       next_addr = 0;
     end
     
     ERROR: begin
       next_rdreq = 0;
+      next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 0;
     end
