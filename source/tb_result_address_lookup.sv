@@ -1,5 +1,5 @@
 // File name:   tb_result_address_fsm.sv
-// Updated:     12 November 2015
+// Updated:     19 November 2015
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
@@ -7,7 +7,7 @@
 
 `timescale 1ns/10ps
 
-module tb_result_address_fsm();
+module tb_result_address_lookup();
 
 reg inc_addr;
 reg [31:0] addr_out;
@@ -19,7 +19,7 @@ reg n_rst;
 reg [31:0] expected_addr_out;
 reg expected_write_enable;
 
-result_address_fsm RAF(.clk, .n_rst, .inc_addr, .addr_out, .write_enable);
+result_address_lookup RAL(.clk, .n_rst, .inc_addr, .addr_out, .write_enable);
 
 //CHECK THIS?
 localparam CLK_PERIOD = 10;

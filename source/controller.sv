@@ -15,6 +15,7 @@ module controller
   input wire match, //match flag from comparators
   input wire shift_enable,
   input wire update_done,
+  input wire ready, //ready signal from the MAC
   input wire eop, //eop from MAC
   input wire error, //error from MAC
   input wire rdempty, //empty signal from Input FIFO
@@ -31,7 +32,7 @@ typedef enum logic [3:0] {
 } state_type;
 
 state_type state, next_state;
-reg next_rdreq, next_wrreq, next_inc_addr, next_addr, next_clear
+reg next_rdreq, next_wrreq, next_inc_addr, next_addr, next_clear;
 
 // NEXT STATE ASSIGNMENT
 // State diagram must be updated to reflect new flags

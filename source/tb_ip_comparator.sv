@@ -1,9 +1,9 @@
-// File name:   result_address_fsm.sv
-// Updated:     12 November 2015
+// File name:   tb_ip_comparator.sv
+// Updated:     19 November 2015
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
-// Description: Test Bench for the Result Address FSM.
+// Description: Test Bench for the IP comparator.
 
 `timescale 1ns/10ps
 
