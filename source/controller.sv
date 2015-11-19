@@ -21,7 +21,8 @@ module controller
   output reg rdreq, //read request signal to Input FIFO
   output reg wrreq, //write request signal to Input FIFO
   output reg inc_addr, //signal to address buffer to increment address
-  output reg addr //signal to avalon slave controller
+  output reg addr, //signal to avalon slave controller
+  output reg clear //signal to comparators to clear the match flag
 );
 
 typedef enum logic [3:0] {
@@ -29,7 +30,7 @@ typedef enum logic [3:0] {
 } state_type;
 
 state_type state, next_state;
-reg next_rdreq, next_wrreq, next_inc_addr, next_addr
+reg next_rdreq, next_wrreq, next_inc_addr, next_addr, next_clear
 
 // NEXT STATE ASSIGNMENT
 // State diagram must be updated to reflect new flags
@@ -97,6 +98,7 @@ always_comb begin
   next_wrreq = wrreq;
   next_inc_addr = inc_addr;
   next_addr = addr;
+  next_clear = clear;
   
   case(next_state)
     RESET: begin
@@ -108,6 +110,7 @@ always_comb begin
       next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 1;
+      next_clear = 0;
     end
     
     IDLE: begin
@@ -115,6 +118,7 @@ always_comb begin
       next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 0;
+      next_clear = 1;
     end
     
     LOAD_INPUT_FIFO: begin
@@ -122,6 +126,7 @@ always_comb begin
       next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 0;
+      next_clear = 0;
     end
     
     COMPARE: begin
@@ -129,6 +134,7 @@ always_comb begin
       next_wrreq = 1;
       next_inc_addr = 0;
       next_addr = 0;
+      next_clear = 0;
     end
     
     MATCH_FOUND: begin
@@ -136,6 +142,7 @@ always_comb begin
       next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 0;
+      next_clear = 0;
     end
     
     LOAD_MEMORY: begin
@@ -143,6 +150,7 @@ always_comb begin
       next_wrreq = 0;
       next_inc_addr = 1;
       next_addr = 0;
+      next_clear = 0;
     end
     
     ERROR: begin
@@ -150,6 +158,7 @@ always_comb begin
       next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 0;
+      next_clear = 0;
     end
   endcase
 end
@@ -158,16 +167,20 @@ end
 always_ff @ (posedge clk, negedge n_rst) begin
   if (!n_rst) begin
     state <= RESET;
-    next_rdreq <= 0;
-    next_inc_addr <= 0;
-    next_addr <= 0;
+    rdreq <= 0;
+    wrreq <= 0;
+    inc_addr <= 0;
+    addr <= 0;
+    clear <= 0;
   end 
   
   else begin
     state <= next_state;
     rdreq <= next_rdreq;
+    wrreq <= next_wrreq;
     inc_addr <= next_inc_addr;
     addr <= next_addr;
+    clear <= next_clear;
   end
 end
 endmodule
