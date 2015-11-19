@@ -22,9 +22,9 @@ reg [31:0] a1, a2, a3; // four byte comparator buffers
 reg next_match;
 
 always_comb begin
-  next_match = 0;
+  next_match = match;
   // check if original matches
-  if (match || (ip_in == {a2[15:0], a3[31:0]})) begin
+  if (ip_in == {a2[15:0], a3[31:0]}) begin
     next_match = 1;
   end
   // shifted one over
