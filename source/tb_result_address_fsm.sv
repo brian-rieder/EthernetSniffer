@@ -1,4 +1,4 @@
-// File name:   result_address_fsm.sv
+// File name:   tb_result_address_fsm.sv
 // Updated:     12 November 2015
 // Authors:     Brian Rieder 
 //              Catie Cowden 
