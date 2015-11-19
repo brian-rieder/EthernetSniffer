@@ -1,4 +1,4 @@
-// File name:   comparator.sv
+// File name:   ip_comparator.sv
 // Updated:     19 November 2015
 // Authors:     Brian Rieder 
 //              Catie Cowden 

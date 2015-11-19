@@ -1,4 +1,4 @@
-// File name:   comparator.sv
+// File name:   mac_comparator.sv
 // Updated:     19 November 2015
 // Authors:     Brian Rieder 
 //              Catie Cowden 
