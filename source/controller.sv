@@ -26,7 +26,8 @@ module controller
 );
 
 typedef enum logic [3:0] {
-  RESET, LOAD_COMP_REG, IDLE, LOAD_INPUT_FIFO, COMPARE, MATCH_FOUND, LOAD_MEMORY, ERROR  
+  RESET, LOAD_COMP_REG, IDLE, LOAD_INPUT_FIFO, COMPARE, MATCH_FOUND, LOAD_MEMORY, ERROR,
+  WAIT1, WAIT2, WAIT3, WAIT4  
 } state_type;
 
 state_type state, next_state;
@@ -66,8 +67,24 @@ always_comb begin
     
     COMPARE: begin
       if(rdempty) begin
-        next_state = MATCH_FOUND;
+        next_state = WAIT1;
       end
+    end
+    
+    WAIT1: begin
+      next_state = WAIT2;
+    end
+    
+    WAIT2: begin
+      next_state = WAIT3;
+    end
+    
+    WAIT3: begin
+      next_state = WAIT4;
+    end
+    
+    WAIT4: begin
+      next_state = MATCH_FOUND;
     end
     
     MATCH_FOUND: begin
