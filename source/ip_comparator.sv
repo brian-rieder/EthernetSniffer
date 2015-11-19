@@ -23,7 +23,20 @@ reg next_match;
 
 always_comb begin
   next_match = 0;
-  if (match || (ip_in == a1) || (ip_in == a2)) begin
+  // check if original matches
+  if (match || (ip_in == a2[31:0])) begin
+    next_match = 1;
+  end
+  // shifted one over
+  else if (ip_in == {a1[7:0], a2[31:8]}) begin
+    next_match = 1;
+  end
+  // shifted two over
+  else if (ip_in == {a1[15:0], a2[31:16]}) begin
+    next_match = 1;
+  end
+  // shifted three over
+  else if (ip_in == {a1[23:0], a2[31:24]}) begin
     next_match = 1;
   end
 end
