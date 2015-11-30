@@ -53,7 +53,8 @@ endclocking
 
 initial
 begin
-	sample_data = 32'hC0A80101; //192.168.001.001
+	n_rst = 1'b1;
+        sample_data = 32'hC0A80101; //192.168.001.001
 	sample_data_shift1 = 32'h01000000;
 	sample_data_shift1_2 = 32'h00C0A801;
 	sample_data_shift2 = 32'h01010000;
@@ -61,11 +62,12 @@ begin
 	sample_data_shift3 = 32'hA8010100;
 	sample_data_shift3_2 = 32'h000000C0;
 	data_in = 32'h0000;
+	ip_in = 32'h0000;
 	clear = '0;
 
 	//Reset Test Case
 	cb.n_rst <= 1'b1;
-	@cb; cb.n_rst <= 1'b0; @cb;
+	@cb; n_rst = 1'b0; @cb;
 	expected_data_out = '0;
 	expected_match = '0;
 	assert(expected_data_out == cb.datao)
@@ -75,6 +77,8 @@ begin
 	cb.n_rst <= 1'b1;
 	@cb; @cb;
 	
+	@cb; clear = 1'b1; @cb; clear = 1'b0;
+
 	//*******************Test Case 2.1 No Shift*********************//
 	ip_in = sample_data; 	
 	data_in = sample_data; 
@@ -170,10 +174,8 @@ begin
 	else $error("4.3: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("4.3: Successful Match: Incorrect Match Flag");
-	
-	@cb; clear = 1'b1; @cb;
 
-		@cb; clear = 1'b1; @cb; clear = 1'b0;
+	@cb; clear = 1'b1; @cb; clear = 1'b0;
 
 	//*******************Test Case 5.1: Two Shift*********************//
 	data_in = sample_data_shift3;
