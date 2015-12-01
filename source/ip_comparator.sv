@@ -19,7 +19,7 @@ module ip_comparator
 );
 
 reg [31:0] a1, a2 = '0; // four byte comparator buffers
-reg next_match;
+reg next_match = '0;
 
 always_comb begin
   next_match = match;
@@ -42,7 +42,14 @@ always_comb begin
 end
 
 always_ff @ (posedge clk, negedge n_rst) begin
-  if ((n_rst == 1'b0) || (clear == 1'b1)) begin
+  //Can only have one condition in if statement at a time for mapped compilation.
+  //Separate clear == 1 and reset == 0 to two statements.
+  if (n_rst == 1'b0) begin
+    a1 <= '0;
+    a2 <= '0;
+    data_out <= '0;
+    match <= '0;
+  end else if (clear == 1'b1) begin
     a1 <= '0;
     a2 <= '0;
     data_out <= '0;
