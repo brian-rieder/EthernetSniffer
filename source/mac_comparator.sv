@@ -18,7 +18,7 @@ module mac_comparator
   output reg [31:0] data_out
 );
 
-reg [31:0] a1, a2, a3, a4, a5; // four byte comparator buffers
+reg [31:0] a1, a2, a3; // four byte comparator buffers
 reg next_match;
 
 always_comb begin
@@ -46,25 +46,19 @@ always_ff @ (posedge clk, negedge n_rst) begin
     a1 <= '0;
     a2 <= '0;
     a3 <= '0;
-    a4 <= '0;
-    a5 <= '0;
     data_out <= '0;
     match <= '0;
   end else if (clear == 1'b1) begin
     a1 <= '0;
     a2 <= '0;
     a3 <= '0;
-    a4 <= '0;
-    a5 <= '0;
     data_out <= '0;
     match <= '0;
   end else begin
     a1 <= data_in;
     a2 <= a1;
     a3 <= a2;
-    a4 <= a3;
-    a5 <= a4;
-    data_out <= a5;
+    data_out <= a3;
     match <= next_match;
   end
 end
