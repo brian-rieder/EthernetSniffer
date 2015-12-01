@@ -62,26 +62,3 @@ always_ff @ (posedge clk, negedge n_rst) begin
 end
 
 endmodule
-
-
-
-
-
-
-
-  // // check if original matches
-  // if (string_in[0:strlen] == comp_buff[19 - strlen:19]) begin
-  //   next_match = 1;
-  // end
-  // // shifted one over
-  // else if (string_in[0:strlen] == comp_buff[18 - strlen:18]) begin
-  //   next_match = 1;
-  // end
-  // // shifted two over
-  // else if (string_in[0:strlen] == comp_buff[17 - strlen:17]) begin
-  //   next_match = 1;
-  // end
-  // // shifted three over
-  // else if (string_in[0:strlen] == comp_buff[16 - strlen:16]) begin
-  //   next_match = 1;
-  // end
