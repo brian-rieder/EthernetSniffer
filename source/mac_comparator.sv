@@ -12,31 +12,31 @@ module mac_comparator
   input wire clk,
   input wire n_rst,
   input wire clear,
-  input reg [31:0] ip_in,
+  input reg [47:0] mac_in,
   input reg [31:0] data_in,
   output reg match,
   output reg [31:0] data_out
 );
 
 reg [31:0] a1, a2, a3; // four byte comparator buffers
-reg next_match;
+reg next_match = 0;
 
 always_comb begin
   next_match = match;
   // check if original matches
-  if (ip_in == {a2[15:0], a3[31:0]}) begin
+  if (mac_in == {a2[15:0], a3[31:0]}) begin
     next_match = 1;
   end
   // shifted one over
-  else if (ip_in == {a2[23:0], a3[31:8]}) begin
+  else if (mac_in == {a2[23:0], a3[31:8]}) begin
     next_match = 1;
   end
   // shifted two over
-  else if (ip_in == {a2[31:0], a3[31:16]}) begin
+  else if (mac_in == {a2[31:0], a3[31:16]}) begin
     next_match = 1;
   end
   // shifted three over
-  else if (ip_in == {a1[7:0], a2[31:0], a3[31:24]}) begin
+  else if (mac_in == {a1[7:0], a2[31:0], a3[31:24]}) begin
     next_match = 1;
   end
 end
