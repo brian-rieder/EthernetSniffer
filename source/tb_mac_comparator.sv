@@ -1,5 +1,5 @@
-// File name:   tb_ip_comparator.sv
-// Updated:     19 November 2015
+// File name:   tb_mac_comparator.sv
+// Updated:     30 November 2015
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
@@ -7,7 +7,7 @@
 
 `timescale 1ns/10ps
 
-module tb_ip_comparator();
+module tb_mac_comparator();
 
 reg clk;
 reg n_rst;
@@ -21,14 +21,16 @@ reg [31:0] expected_data_out;
 reg expected_match;
 
 reg [31:0] sample_data;
+reg [31:0] sample_data_2;
 reg [31:0] sample_data_shift1;
 reg [31:0] sample_data_shift1_2;
 reg [31:0] sample_data_shift2;
 reg [31:0] sample_data_shift2_2;
 reg [31:0] sample_data_shift3;
 reg [31:0] sample_data_shift3_2;
+reg [31:0] sample_data_shift3_3;
 
-ip_comparator COMP(.clk, .n_rst, .clear, .ip_in, .data_in, .match, .data_out);
+mac_comparator COMP(.clk, .n_rst, .clear, .ip_in, .data_in, .match, .data_out);
 
 localparam CLK_PERIOD = 10;
 
@@ -54,13 +56,15 @@ endclocking
 initial
 begin
 	n_rst = 1'b1;
-        sample_data = 32'hC0A80101; //192.168.001.001
-	sample_data_shift1 = 32'h01000000;
-	sample_data_shift1_2 = 32'h00C0A801;
-	sample_data_shift2 = 32'h01010000;
-	sample_data_shift2_2 = 32'h0000C0A8;
-	sample_data_shift3 = 32'hA8010100;
-	sample_data_shift3_2 = 32'h000000C0;
+	sample_data = 32'hE5F60000; //E5:F6:00:00
+        sample_data_2 = 32'hA1B2C3D4; //A1:B2:C3:D4
+	sample_data_shift1 = 32'hD4E5F600;
+	sample_data_shift1_2 = 32'h00A1B2C3;
+	sample_data_shift2 = 32'hC3D4E5F6;
+	sample_data_shift2_2 = 32'h0000A1B2;
+	sample_data_shift3 = 32'hF6000000;
+	sample_data_shift3_2 = 32'hB2C3D4E5;
+	sample_data_shift3_3 = 32'h000000A1;
 	data_in = 32'h0000;
 	ip_in = 32'h0000;
 	clear = '0;
@@ -93,8 +97,18 @@ begin
 	@cb;
 
 	//Test Case 2.2
-	data_in = 32'h0000; 
+	data_in = sample_data_2; 
 	expected_data_out = sample_data;
+	expected_match = 1'b0;
+	@cb; @cb;
+	assert(expected_data_out == cb.datao)
+	else $error("2.2: Successful Match: Incorrect Data_Out");
+	assert(expected_match == cb.m)
+	else $error("2.2: Successful Match: Incorrect Match Flag");
+
+	//Test Case 2.3
+	data_in = 32'h0000; 
+	expected_data_out = sample_data_2;
 	expected_match = 1'b1;
 	@cb; @cb;
 	assert(expected_data_out == cb.datao)
