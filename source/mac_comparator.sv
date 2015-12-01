@@ -42,7 +42,13 @@ always_comb begin
 end
 
 always_ff @ (posedge clk, negedge n_rst) begin
-  if ((n_rst == 1'b0) || (clear == 1'b1)) begin
+  if (n_rst == 1'b0) begin
+    a1 <= '0;
+    a2 <= '0;
+    a3 <= '0;
+    data_out <= '0;
+    match <= '0;
+  end else if (clear == 1'b1) begin
     a1 <= '0;
     a2 <= '0;
     a3 <= '0;
