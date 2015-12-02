@@ -21,11 +21,12 @@ module string_comparator
 
 reg [7:0] comp_buff [0:19];
 reg [4:0] i, j;
-reg next_match;
+reg next_match = 0;
 reg [16:0] char_matches_0, char_matches_1, char_matches_2, char_matches_3;
 
 always_comb begin
   next_match = match;
+  char_matches_0 = '0; char_matches_1 = '0; char_matches_2 = '0; char_matches_3 = '0;
   for(j = 0; j < 17; j = j + 1) begin
     char_matches_0[j] = (j     > strlen) || (comp_buff[19 - j] == string_in[j]);
     char_matches_1[j] = ((j+1) > strlen) || (comp_buff[18 - j] == string_in[j]);
