@@ -3,7 +3,7 @@
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
-// Description: Test Bench for the IP comparator.
+// Description: Test Bench for the Mac comparator.
 
 `timescale 1ns/10ps
 
