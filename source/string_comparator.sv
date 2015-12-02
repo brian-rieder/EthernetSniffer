@@ -60,7 +60,7 @@ always_ff @ (posedge clk, negedge n_rst) begin
       comp_buff[i+2] <= comp_buff[i - 2];
       comp_buff[i+3] <= comp_buff[i - 1];
     end
-    data_out <= {comp_buff[16], comp_buff[17], comp_buff[18], comp_buff[19]};
+    data_out <= {comp_buff[19], comp_buff[18], comp_buff[17], comp_buff[16]};
     match <= next_match;
   end
 end
