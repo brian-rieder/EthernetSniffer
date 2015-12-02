@@ -86,160 +86,217 @@ begin
 	//*******************Test Case 2.1 No Shift*********************//
 	mac_in = 48'hA1B2C3D4E5F6; 	
 	data_in = sample_data; 
-	expected_data_out = 32'h0000;
+	expected_data_out = 32'h0000; //(1)
 	expected_match = '0;
-	@cb; @cb;
+	@cb;
 	assert(expected_data_out == cb.datao)
 	else $error("2.1: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("2.1: Successful Match: Incorrect Match Flag");
 
-	@cb;
-
 	//Test Case 2.2
 	data_in = sample_data_2; 
-	expected_data_out = sample_data;
+	expected_data_out = 32'h0000; //(2)
 	expected_match = 1'b0;
-	@cb; @cb;
+	@cb;
 	assert(expected_data_out == cb.datao)
 	else $error("2.2: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("2.2: Successful Match: Incorrect Match Flag");
 
-	@cb;
-
 	//Test Case 2.3
 	data_in = 32'h0000; 
-	expected_data_out = sample_data_2;
-	expected_match = 1'b1;
-	@cb; @cb;
+	expected_data_out = 32'h0000; //(3)
+	expected_match = 1'b0;
+	@cb;
 	assert(expected_data_out == cb.datao)
 	else $error("2.3: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("2.3: Successful Match: Incorrect Match Flag");
 
-	@cb; clear = 1'b1; @cb; clear = 1'b0;
+	//Check Data_Out
+	@cb;@cb;
+	expected_data_out = sample_data;
+	assert(expected_data_out == cb.datao)
+	else $error("2.4: Successful Match: Incorrect Data_Out");
+	expected_match = 1'b1;
+	assert(expected_match == cb.m)
+	else $error("2.3: Successful Match: Incorrect Match Flag");
+	@cb;
+	expected_data_out = sample_data_2;
+	assert(expected_data_out == cb.datao)
+	else $error("2.5: Successful Match: Incorrect Data_Out");
+	@cb;
+	expected_data_out = 32'h0000;
+	assert(expected_data_out == cb.datao)
+	else $error("2.6: Successful Match: Incorrect Data_Out");
+	clear = 1'b1; @cb; clear = 1'b0;
 
 	//*******************Test Case 3.1: One Shift*********************//
 	data_in = sample_data_shift1;
 	expected_data_out = 32'h0000;
 	expected_match = '0;
-	@cb; @cb;
+	@cb; 
 	assert(expected_data_out == cb.datao)
 	else $error("3.1: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("3.1: Successful Match: Incorrect Match Flag");
 
-	@cb;
-
 	//Test Case 3.2
 	data_in = sample_data_shift1_2;
-	expected_data_out = sample_data_shift1;
+	expected_data_out = 32'h0000;
 	expected_match = 1'b0;
-	@cb; @cb;
+	@cb; 
 	assert(expected_data_out == cb.datao)
 	else $error("3.2: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("3.2: Successful Match: Incorrect Match Flag");
 
-	@cb;
-	
 	//Test Case 3.3
 	data_in = 32'h0000;
-	expected_data_out = sample_data_shift1_2;
-	expected_match = 1'b1;
-	@cb; @cb;
+	expected_data_out = 32'h0000;
+	expected_match = 1'b0;
+	@cb;
 	assert(expected_data_out == cb.datao)
 	else $error("3.3: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("3.3: Successful Match: Incorrect Match Flag");
 	
+	@cb;@cb;
+	expected_data_out = sample_data_shift1;
+	assert(expected_data_out == cb.datao)
+	else $error("3.4: Successful Match: Incorrect Data_Out");
+	expected_match = 1'b1;
+	assert(expected_match == cb.m)
+	else $error("2.3: Successful Match: Incorrect Match Flag");
+	@cb;
+	expected_data_out = sample_data_shift1_2;
+	assert(expected_data_out == cb.datao)
+	else $error("3.5: Successful Match: Incorrect Data_Out");
+	@cb;
+	expected_data_out = 32'h0000;
+	assert(expected_data_out == cb.datao)
+	else $error("3.6: Successful Match: Incorrect Data_Out");
 
-	@cb; clear = 1'b1; @cb; clear = 1'b0;
+	clear = 1'b1; @cb; clear = 1'b0;
 
 	//*******************Test Case 4.1: Two Shift*********************//
 	data_in = sample_data_shift2;
 	expected_data_out = 32'h0000;
 	expected_match = '0;
-	@cb; @cb;
+	@cb; //@cb;
 	assert(expected_data_out == cb.datao)
 	else $error("4.1: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("4.1: Successful Match: Incorrect Match Flag");
 
-	@cb;
+	//@cb;
 
 	//Test Case 4.2
 	data_in = sample_data_shift2_2;
-	expected_data_out = sample_data_shift2;
+	expected_data_out = 32'h0000;
 	expected_match = 1'b0;
-	@cb; @cb;
+	@cb; //@cb;
 	assert(expected_data_out == cb.datao)
 	else $error("4.2: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("4.2: Successful Match: Incorrect Match Flag");
 
-	@cb;
+	//@cb;
 	
 	//Test Case 4.3
 	data_in = 32'h0000;
-	expected_data_out = sample_data_shift2_2;
-	expected_match = 1'b1;
-	@cb; @cb;
+	expected_data_out = 32'h0000;
+	expected_match = 1'b0;
+	@cb; //@cb;
 	assert(expected_data_out == cb.datao)
 	else $error("4.3: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("4.3: Successful Match: Incorrect Match Flag");
 
-	@cb; clear = 1'b1; @cb; clear = 1'b0;
+	@cb;@cb;
+	expected_data_out = sample_data_shift2;
+	assert(expected_data_out == cb.datao)
+	else $error("4.4: Successful Match: Incorrect Data_Out");
+	expected_match = 1'b1;
+	assert(expected_match == cb.m)
+	else $error("2.3: Successful Match: Incorrect Match Flag");
+	@cb;
+	expected_data_out = sample_data_shift2_2;
+	assert(expected_data_out == cb.datao)
+	else $error("4.5: Successful Match: Incorrect Data_Out");
+	@cb;
+	expected_data_out = 32'h0000;
+	assert(expected_data_out == cb.datao)
+	else $error("4.6: Successful Match: Incorrect Data_Out");
+	clear = 1'b1; @cb; clear = 1'b0;
 
 	//*******************Test Case 5.1: Two Shift*********************//
 	data_in = sample_data_shift3;
 	expected_data_out = 32'h0000;
 	expected_match = '0;
-	@cb; @cb;
+	@cb; //@cb;
 	assert(expected_data_out == cb.datao)
 	else $error("5.1: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("5.1: Successful Match: Incorrect Match Flag");
 
-	@cb;
+	//@cb;
 
 	//Test Case 5.2
 	data_in = sample_data_shift3_2;
-	expected_data_out = sample_data_shift3;
+	expected_data_out = 32'h0000;
 	expected_match = 1'b0;
-	@cb; @cb;
+	@cb; //@cb;
 	assert(expected_data_out == cb.datao)
 	else $error("5.2: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("5.2: Successful Match: Incorrect Match Flag");
 
-	@cb;
+	//@cb;
 	
 	//Test Case 5.3
 	data_in = sample_data_shift3_3;
-	expected_data_out = sample_data_shift3_2;
+	expected_data_out = 32'h0000;
 	expected_match = 1'b0;
-	@cb; @cb;
+	@cb; 
 	assert(expected_data_out == cb.datao)
 	else $error("5.3: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("5.3: Successful Match: Incorrect Match Flag");
-
-	@cb;
 	
 	//Test Case 5.4
 	data_in = 32'h0000;
-	expected_data_out = sample_data_shift3_3;
-	expected_match = 1'b1;
-	@cb; @cb;
+	expected_data_out = 32'h0000;
+	expected_match = 1'b0;
+	@cb;
 	assert(expected_data_out == cb.datao)
-	else $error("5.3: Successful Match: Incorrect Data_Out");
+	else $error("5.4: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
-	else $error("5.3: Successful Match: Incorrect Match Flag");
+	else $error("5.4: Successful Match: Incorrect Match Flag");
 	
-	@cb; clear = 1'b1; @cb;
+	@cb;
+	expected_data_out = sample_data_shift3;
+	assert(expected_data_out == cb.datao)
+	else $error("5.5: Successful Match: Incorrect Data_Out");
+	expected_match = 1'b1;
+	assert(expected_match == cb.m)
+	else $error("2.3: Successful Match: Incorrect Match Flag");
+	@cb;
+	expected_data_out = sample_data_shift3_2;
+	assert(expected_data_out == cb.datao)
+	else $error("5.6: Successful Match: Incorrect Data_Out");
+	@cb;
+	expected_data_out = sample_data_shift3_3;
+	assert(expected_data_out == cb.datao)
+	else $error("5.7: Successful Match: Incorrect Data_Out");
+	@cb;
+	expected_data_out = 32'h0000;
+	assert(expected_data_out == cb.datao)
+	else $error("5.8: Successful Match: Incorrect Data_Out");
+	clear = 1'b1; @cb; clear = 1'b0;
+
+	 clear = 1'b1; @cb;
 
 	$stop;
 
