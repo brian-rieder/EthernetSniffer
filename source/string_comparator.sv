@@ -3,7 +3,7 @@
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
-// Description: Comparator designed for MAC address matching based on predefined corrupt 
+// Description: Comparator designed for string matching based on predefined corrupt 
 //              strings programmed from the Atom.
 
 module string_comparator
@@ -56,6 +56,9 @@ always_ff @ (posedge clk, negedge n_rst) begin
     comp_buff[3] <= data_in[31:24];
     for(i = 4; i < 19; i = i + 4) begin
       comp_buff[i] <= comp_buff[i - 4];
+      comp_buff[i+1] <= comp_buff[i - 3];
+      comp_buff[i+2] <= comp_buff[i - 2];
+      comp_buff[i+3] <= comp_buff[i - 1];
     end
     data_out <= {comp_buff[16], comp_buff[17], comp_buff[18], comp_buff[19]};
     match <= next_match;
