@@ -12,7 +12,7 @@ module string_comparator
   input wire clk,
   input wire n_rst,
   input wire clear,
-  input reg [7:0] string_in [0:16],
+  input reg [7:0] [0:16] string_in,
   input reg [4:0] strlen,
   input reg [31:0] data_in,
   output reg match,
