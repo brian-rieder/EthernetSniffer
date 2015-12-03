@@ -25,7 +25,7 @@ reg next_match = 0;
 reg [16:0] char_matches_0, char_matches_1, char_matches_2, char_matches_3;
 
 always_comb begin
-  next_match = 1'b0;
+  next_match = match;
   char_matches_0 = '0; char_matches_1 = '0; char_matches_2 = '0; char_matches_3 = '0;
   for(j = 0; j < 17; j = j + 1) begin
     char_matches_0[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[19 - j] == string_in[j]))?1:0;
