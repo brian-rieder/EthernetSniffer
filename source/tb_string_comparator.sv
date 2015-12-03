@@ -26,13 +26,6 @@ reg [31:0] sample_data_2;
 reg [31:0] sample_data_3;
 reg [31:0] sample_data_4;
 reg [31:0] sample_data_5;
-reg [31:0] sample_data_shift1;
-reg [31:0] sample_data_shift1_2;
-reg [31:0] sample_data_shift2;
-reg [31:0] sample_data_shift2_2;
-reg [31:0] sample_data_shift3;
-reg [31:0] sample_data_shift3_2;
-reg [31:0] sample_data_shift3_3;
 
 string_comparator COMP(.clk, .n_rst, .clear, .string_in, .strlen, .data_in, .match, .data_out);
 
@@ -85,31 +78,114 @@ begin
 
 	@cb; clear = 1'b1; @cb; clear = 1'b0;
 
-	//*******************Test Case 2.1 No Shift*********************//
+	//*******************Test Case 1: Regular URL, shifted *********************//
 	string_in = "www.google.com"; 	
 	
-	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5);
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
 	
 	sample_data = " www";
 	sample_data_2 = ".goo";
 	sample_data_3 = "gle.";
 	sample_data_4 = "com ";
 	sample_data_5 = "    ";
-	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5);
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
 
 	sample_data = "  ww";
 	sample_data_2 = "w.go";
 	sample_data_3 = "ogle";
 	sample_data_4 = ".com";
 	sample_data_5 = "    ";
-	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5);
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
 
 	sample_data = "   w";
 	sample_data_2 = "ww.g";
 	sample_data_3 = "oogl";
 	sample_data_4 = "e.co";
 	sample_data_5 = "m   ";
-	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5);
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
+
+	//*******************Test Case 2: Short string, all positions *********************//
+	string_in = "abc"; 
+	strlen = 3;	
+
+	sample_data = "abc ";
+	sample_data_2 = "    ";
+	sample_data_3 = "    ";
+	sample_data_4 = "    ";
+	sample_data_5 = "    ";
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
+
+	sample_data = "    ";
+	sample_data_2 = "abc ";
+	sample_data_3 = "    ";
+	sample_data_4 = "    ";
+	sample_data_5 = "    ";
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
+
+	sample_data = "    ";
+	sample_data_2 = "    ";
+	sample_data_3 = "abc ";
+	sample_data_4 = "    ";
+	sample_data_5 = "    ";
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
+
+	sample_data = "    ";
+	sample_data_2 = "    ";
+	sample_data_3 = "    ";
+	sample_data_4 = " abc";
+	sample_data_5 = "    ";
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
+
+	sample_data = "    ";
+	sample_data_2 = "    ";
+	sample_data_3 = "    ";
+	sample_data_4 = "    ";
+	sample_data_5 = " abc";
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
+
+//*******************Test Case 3: Length of 17 *********************//
+	string_in = "www.linkedin.com/"; 
+	strlen = 17;	
+
+	sample_data = "www.";
+	sample_data_2 = "link";
+	sample_data_3 = "edin";
+	sample_data_4 = ".com";
+	sample_data_5 = "/   ";
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
+
+//*******************Test Case 4: All ones *********************//
+	string_in = '1; 
+	strlen = 17;	
+
+	sample_data = '1;
+	sample_data_2 = '1;
+	sample_data_3 = '1;
+	sample_data_4 = '1;
+	sample_data_5 = '1;
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
+
+//*******************Test Case 5: All zeroes *******************//
+	string_in = '0; 
+	strlen = 17;	
+
+	sample_data = '0;
+	sample_data_2 = '0;
+	sample_data_3 = '0;
+	sample_data_4 = '0;
+	sample_data_5 = '0;
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
+
+//*******************Test Case 6: Start "correct" but change to incorrect in the middle *******************//
+	string_in = "www.google.com"; 
+	strlen = 14;	
+
+	sample_data = "www.";
+	sample_data_2 = "goog";
+	sample_data_3 = "book";
+	sample_data_4 = ".com";
+	sample_data_5 = "    ";
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b0);
 
 	$stop;
 
@@ -121,6 +197,7 @@ task compare;
 	input [31:0] sample_data_3;
 	input [31:0] sample_data_4;
 	input [31:0] sample_data_5;
+	input reg expected_matchFlag;
 	begin
 	data_in = sample_data; 
 	expected_data_out = 32'h0000;
@@ -158,7 +235,7 @@ task compare;
 	expected_data_out = sample_data_5;
 	assert(expected_data_out == cb.datao)
 	else $error("2.6: Successful Match: Incorrect Data_Out");
-	expected_match = 1'b1;
+	expected_match = expected_matchFlag;
 	assert(expected_match == cb.m)
 	else $error("2.1: Successful Match: Incorrect Match Flag");
 	
