@@ -12,7 +12,7 @@ module mac_comparator
   input wire clk,
   input wire n_rst,
   input wire clear,
-  input reg [47:0] mac_in,
+  input reg [47:0] flagged_mac,
   input reg [31:0] data_in,
   output reg match,
   output reg [31:0] data_out
