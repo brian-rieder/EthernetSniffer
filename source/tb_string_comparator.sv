@@ -23,6 +23,9 @@ reg expected_match;
 
 reg [31:0] sample_data;
 reg [31:0] sample_data_2;
+reg [31:0] sample_data_3;
+reg [31:0] sample_data_4;
+reg [31:0] sample_data_5;
 reg [31:0] sample_data_shift1;
 reg [31:0] sample_data_shift1_2;
 reg [31:0] sample_data_shift2;
@@ -58,8 +61,12 @@ endclocking
 initial
 begin
 	n_rst = 1'b1;
-	sample_data = "test";
-        sample_data_2 = " tes";
+	strlen = 14;
+	sample_data = "www.";
+        sample_data_2 = "goog";
+	sample_data_3 = "le.c";
+	sample_data_4 = "om  ";
+	sample_data_5 = "    ";
 	data_in = 32'h0000;
 	string_in = 32'h0000;
 	clear = '0;
@@ -75,59 +82,92 @@ begin
 	else $error("1: Reset Test Case: Incorrect Match Flag");
 	cb.n_rst <= 1'b1;
 	@cb; @cb;
-	
+
 	@cb; clear = 1'b1; @cb; clear = 1'b0;
 
 	//*******************Test Case 2.1 No Shift*********************//
 	string_in = "www.google.com"; 	
+	
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5);
+	
+	sample_data = " www";
+	sample_data_2 = ".goo";
+	sample_data_3 = "gle.";
+	sample_data_4 = "com ";
+	sample_data_5 = "    ";
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5);
+
+	sample_data = "  ww";
+	sample_data_2 = "w.go";
+	sample_data_3 = "ogle";
+	sample_data_4 = ".com";
+	sample_data_5 = "    ";
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5);
+
+	sample_data = "   w";
+	sample_data_2 = "ww.g";
+	sample_data_3 = "oogl";
+	sample_data_4 = "e.co";
+	sample_data_5 = "m   ";
+	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5);
+
+	$stop;
+
+end
+
+task compare;
+	input [31:0] sample_data;
+	input [31:0] sample_data_2;
+	input [31:0] sample_data_3;
+	input [31:0] sample_data_4;
+	input [31:0] sample_data_5;
+	begin
 	data_in = sample_data; 
 	expected_data_out = 32'h0000;
 	expected_match = '0;
 	@cb;
-	assert(expected_data_out == cb.datao)
-	else $error("2.1: Successful Match: Incorrect Data_Out");
-	assert(expected_match == cb.m)
-	else $error("2.1: Successful Match: Incorrect Match Flag");
 
-	//Test Case 2.2
-	data_in = sample_data_2; 
-	expected_data_out = 32'h0000;
-	expected_match = 1'b0;
+	data_in = sample_data_2; @cb;
+
+	data_in = sample_data_3; @cb;
+
+	data_in = sample_data_4; @cb;
+	
+	data_in = sample_data_5; @cb;
+
+	data_in = 32'h0000; @cb;
+
+	// DATA OUT
+	expected_match = 1'b1;
+	assert(expected_match == cb.m)
+	else $error("2.4: Successful Match: Incorrect Match Flag");
 	@cb;
-	assert(expected_data_out == cb.datao)
-	else $error("2.2: Successful Match: Incorrect Data_Out");
-	assert(expected_match == cb.m)
-	else $error("2.2: Successful Match: Incorrect Match Flag");
-
-	//Test Case 2.3
-	data_in = 32'h0000; 
-	expected_data_out = 32'h0000; //(3)
-	expected_match = 1'b0;
-	@cb;
-	assert(expected_data_out == cb.datao)
-	else $error("2.3: Successful Match: Incorrect Data_Out");
-	assert(expected_match == cb.m)
-	else $error("2.3: Successful Match: Incorrect Match Flag");
-
-	//Check Data_Out
-	@cb;@cb;
 	expected_data_out = sample_data;
 	assert(expected_data_out == cb.datao)
 	else $error("2.4: Successful Match: Incorrect Data_Out");
-	expected_match = 1'b1;
+	expected_match = 1'b0;
 	assert(expected_match == cb.m)
-	else $error("2.3: Successful Match: Incorrect Match Flag");
+	else $error("2.4: Successful Match: Incorrect Match Flag");
 	@cb;
 	expected_data_out = sample_data_2;
 	assert(expected_data_out == cb.datao)
 	else $error("2.5: Successful Match: Incorrect Data_Out");
 	@cb;
-	expected_data_out = 32'h0000;
+	expected_data_out = sample_data_3;
 	assert(expected_data_out == cb.datao)
 	else $error("2.6: Successful Match: Incorrect Data_Out");
+	@cb;
+	expected_data_out = sample_data_4;
+	assert(expected_data_out == cb.datao)
+	else $error("2.7: Successful Match: Incorrect Data_Out");
+	@cb;
+	expected_data_out = sample_data_5;
+	assert(expected_data_out == cb.datao)
+	else $error("2.8: Successful Match: Incorrect Data_Out");
+	
+	@cb; @cb; @cb; @cb;
 	clear = 1'b1; @cb; clear = 1'b0;
+	end	
+endtask
 
-	$stop;
-
-end
 endmodule

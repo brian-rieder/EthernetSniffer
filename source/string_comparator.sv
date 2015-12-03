@@ -25,15 +25,18 @@ reg next_match = 0;
 reg [16:0] char_matches_0, char_matches_1, char_matches_2, char_matches_3;
 
 always_comb begin
-  next_match = match;
+  next_match = 1'b0;
   char_matches_0 = '0; char_matches_1 = '0; char_matches_2 = '0; char_matches_3 = '0;
   for(j = 0; j < 17; j = j + 1) begin
-    char_matches_0[j] = (j     > strlen) || (comp_buff[19 - j] == string_in[j]);
-    char_matches_1[j] = ((j+1) > strlen) || (comp_buff[18 - j] == string_in[j]);
-    char_matches_2[j] = ((j+2) > strlen) || (comp_buff[17 - j] == string_in[j]);
-    char_matches_2[j] = ((j+3) > strlen) || (comp_buff[16 - j] == string_in[j]);
+    char_matches_0[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[19 - j] == string_in[j]))?1:0;
+    char_matches_1[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[18 - j] == string_in[j]))?1:0;
+    char_matches_2[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[17 - j] == string_in[j]))?1:0;
+    char_matches_3[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[16 - j] == string_in[j]))?1:0;
   end
-  next_match = (&char_matches_0) || (&char_matches_1) || (&char_matches_2) || (&char_matches_3);
+
+  if (char_matches_0 == '1 || char_matches_1 == '1 || char_matches_2 == '1 || char_matches_3 == '1) begin
+	next_match = 1'b1;
+  end
 end
 
 always_ff @ (posedge clk, negedge n_rst) begin
