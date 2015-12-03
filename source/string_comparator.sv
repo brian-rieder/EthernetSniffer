@@ -20,7 +20,7 @@ module string_comparator
 );
 
 reg [7:0] comp_buff [0:19];
-reg [4:0] i, j;
+int unsigned i, j;
 reg next_match = 0;
 reg [16:0] char_matches_0, char_matches_1, char_matches_2, char_matches_3;
 
