@@ -42,13 +42,13 @@ end
 always_ff @ (posedge clk, negedge n_rst) begin
   if (n_rst == 1'b0) begin
     for(i = 0; i < 20; i = i + 1) begin
-      comp_buff[i] = '0;
+      comp_buff[i] <= '0;
     end 
     data_out <= '0;
     match <= '0;
   end else if (clear == 1'b1) begin
     for(i = 0; i < 20; i = i + 1) begin
-      comp_buff[i] = '0;
+      comp_buff[i] <= '0;
     end 
     data_out <= '0;
     match <= '0;
