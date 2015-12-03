@@ -9,30 +9,42 @@
 module ethernetsniffer(
 input wire clk,
 input wire n_rst,
-input wire [31:0] dataIn,
+input wire [31:0] data_in,
 input wire eop,
 input wire empty,
-input wire err,
+input wire error,
 input wire valid,
 input wire ready,
 input wire sop,
+input wire rdempty, //from Input FIFO??
 input reg [15:0] flagged_port,
 input reg [31:0] flagged_ip,
 input reg [47:0] flagged_mac,
 input reg [0:16][7:0] flagged_string;
-output wire addr_toAM,
+output wire addr_out,
 output wire wr_en,
-output wire addr_toAS,
+output wire addr_as,
 output wire rdreq,
-output wire [31:0] dataOut
-);
+output wire [31:0] data_out);
 
-wire shift_enable, eop, d_orig;
-wire d_edge, byte_received, d_minus_sync, d_plus_sync, w_enable;
-wire [7:0] rcv_data;
+wire clear;
+wire [4:0] strlen;
+wire match;
+wire inc_addr;
+wire write_enable;
 
-decode DECODE(.clk(clk), .n_rst(n_rst), .d_plus(d_plus_sync), 
-.shift_enable(shift_enable), .eop(eop), .d_orig(d_orig));
+string_comparator SC(.clk, .n_rst, .clear, .flagged_string, .strlen, .data_in, .match, .data_out);
+
+mac_comparator MC (.clk, .n_rst, .clear, .flagged_mac, .data_in, .match, .data_out);
+
+ip_comparator IC (.clk, .n_rst, .clear, .flagged_ip, .data_in, .match, .data_out);
+
+port_comparator PC (.clk, .n_rst, .clear, .flagged_port, .data_in, .match, .data_out);
+
+result_address_fsm RAFSM (.clk, .n_rst, .inc_addr, .addr_out, .write_enable);
+
+controller CTRLR (.clk, .n_rst, .match, .shift_enable(valid), .update_done(eop), .ready, .eop, .error, .rdempty, .rdreq, .inc_addr, .addr_as, .clear);
+
 
 
 endmodule

@@ -20,7 +20,7 @@ module controller
   input wire error, //error from MAC
   input wire rdempty, //empty signal from Input FIFO
   output reg rdreq, //read request signal to Input FIFO
-  output reg wrreq, //write request signal to Input FIFO
+  //output reg wrreq, //write request signal to Input FIFO
   output reg inc_addr, //signal to address buffer to increment address
   output reg addr, //signal to avalon slave controller
   output reg clear //signal to comparators to clear the match flag
