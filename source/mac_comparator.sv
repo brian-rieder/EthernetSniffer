@@ -24,19 +24,19 @@ reg next_match = 0;
 always_comb begin
   next_match = match;
   // check if original matches
-  if (mac_in == {a2[15:0], a3[31:0]}) begin
+  if (flagged_mac == {a2[15:0], a3[31:0]}) begin
     next_match = 1;
   end
   // shifted one over
-  else if (mac_in == {a2[23:0], a3[31:8]}) begin
+  else if (flagged_mac == {a2[23:0], a3[31:8]}) begin
     next_match = 1;
   end
   // shifted two over
-  else if (mac_in == {a2[31:0], a3[31:16]}) begin
+  else if (flagged_mac == {a2[31:0], a3[31:16]}) begin
     next_match = 1;
   end
   // shifted three over
-  else if (mac_in == {a1[7:0], a2[31:0], a3[31:24]}) begin
+  else if (flagged_mac == {a1[7:0], a2[31:0], a3[31:24]}) begin
     next_match = 1;
   end
 end

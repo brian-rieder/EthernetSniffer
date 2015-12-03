@@ -11,7 +11,7 @@ module tb_ip_comparator();
 
 reg clk;
 reg n_rst;
-reg [31:0] ip_in;
+reg [31:0] flagged_ip;
 reg [31:0] data_in;
 reg [31:0] data_out;
 reg match;
@@ -28,7 +28,7 @@ reg [31:0] sample_data_shift2_2;
 reg [31:0] sample_data_shift3;
 reg [31:0] sample_data_shift3_2;
 
-ip_comparator COMP(.clk, .n_rst, .clear, .ip_in, .data_in, .match, .data_out);
+ip_comparator COMP(.clk, .n_rst, .clear, .flagged_ip, .data_in, .match, .data_out);
 
 localparam CLK_PERIOD = 10;
 
@@ -45,7 +45,7 @@ clocking cb @(posedge clk);
 	default input #1step output #100ps;
 	output #800ps n_rst = n_rst;
 	output datai = data_in;
-	output ipin = ip_in;
+	output flaggedip = flagged_ip;
 	output c = clear;
 	input datao = data_out;
 	input m = match;
@@ -62,7 +62,7 @@ begin
 	sample_data_shift3 = 32'hA8010100;
 	sample_data_shift3_2 = 32'h000000C0;
 	data_in = 32'h0000;
-	ip_in = 32'h0000;
+	flagged_ip = 32'h0000;
 	clear = '0;
 
 	//Reset Test Case
@@ -80,7 +80,7 @@ begin
 	@cb; clear = 1'b1; @cb; clear = 1'b0;
 
 	//*******************Test Case 2.1 No Shift*********************//
-	ip_in = sample_data; 	
+	flagged_ip = sample_data; 	
 	data_in = sample_data; 
 	@cb; //@cb;
 

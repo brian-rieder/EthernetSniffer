@@ -11,7 +11,7 @@ module tb_mac_comparator();
 
 reg clk;
 reg n_rst;
-reg [47:0] mac_in;
+reg [47:0] flagged_mac;
 reg [31:0] data_in;
 reg [31:0] data_out;
 reg match;
@@ -30,7 +30,7 @@ reg [31:0] sample_data_shift3;
 reg [31:0] sample_data_shift3_2;
 reg [31:0] sample_data_shift3_3;
 
-mac_comparator COMP(.clk, .n_rst, .clear, .mac_in, .data_in, .match, .data_out);
+mac_comparator COMP(.clk, .n_rst, .clear, .flagged_mac, .data_in, .match, .data_out);
 
 localparam CLK_PERIOD = 10;
 
@@ -47,7 +47,7 @@ clocking cb @(posedge clk);
 	default input #1step output #100ps;
 	output #800ps n_rst = n_rst;
 	output datai = data_in;
-	output macin = mac_in;
+	output flaggedmac = flagged_mac;
 	output c = clear;
 	input datao = data_out;
 	input m = match;
@@ -66,7 +66,7 @@ begin
 	sample_data_shift3_2 = 32'hB2C3D4E5;
 	sample_data_shift3_3 = 32'h000000A1;
 	data_in = 32'h0000;
-	mac_in = 32'h0000;
+	flagged_mac = 32'h0000;
 	clear = '0;
 
 	//Reset Test Case
@@ -84,7 +84,7 @@ begin
 	@cb; clear = 1'b1; @cb; clear = 1'b0;
 
 	//*******************Test Case 2.1 No Shift*********************//
-	mac_in = 48'hA1B2C3D4E5F6; 	
+	flagged_mac = 48'hA1B2C3D4E5F6; 	
 	data_in = sample_data; 
 	expected_data_out = 32'h0000; //(1)
 	expected_match = '0;
