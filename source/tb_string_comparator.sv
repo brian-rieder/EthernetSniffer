@@ -11,7 +11,7 @@ module tb_string_comparator();
 
 reg clk;
 reg n_rst;
-reg [0:16][7:0] string_in;
+reg [0:16][7:0] flagged_string;
 reg [4:0] strlen;
 reg [31:0] data_in;
 reg [31:0] data_out;
@@ -27,7 +27,7 @@ reg [31:0] sample_data_3;
 reg [31:0] sample_data_4;
 reg [31:0] sample_data_5;
 
-string_comparator COMP(.clk, .n_rst, .clear, .string_in, .strlen, .data_in, .match, .data_out);
+string_comparator COMP(.clk, .n_rst, .clear, .flagged_string, .strlen, .data_in, .match, .data_out);
 
 localparam CLK_PERIOD = 10;
 
@@ -44,7 +44,7 @@ clocking cb @(posedge clk);
 	default input #1step output #100ps;
 	output #800ps n_rst = n_rst;
 	output datai = data_in;
-	output stringin = string_in;
+	output flaggedstring = flagged_string;
 	output stringlen = strlen;
 	output c = clear;
 	input datao = data_out;
@@ -61,7 +61,7 @@ begin
 	sample_data_4 = "om  ";
 	sample_data_5 = "    ";
 	data_in = 32'h0000;
-	string_in = 32'h0000;
+	flagged_string = 32'h0000;
 	clear = '0;
 
 	//Reset Test Case
@@ -79,7 +79,7 @@ begin
 	@cb; clear = 1'b1; @cb; clear = 1'b0;
 
 	//*******************Test Case 1: Regular URL, shifted *********************//
-	string_in = "www.google.com"; 	
+	flagged_string = "www.google.com"; 	
 	
 	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
 	
@@ -105,7 +105,7 @@ begin
 	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
 
 	//*******************Test Case 2: Short string, all positions *********************//
-	string_in = "abc"; 
+	flagged_string = "abc"; 
 	strlen = 3;	
 
 	sample_data = "abc ";
@@ -144,7 +144,7 @@ begin
 	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
 
 //*******************Test Case 3: Length of 17 *********************//
-	string_in = "www.linkedin.com/"; 
+	flagged_string= "www.linkedin.com/"; 
 	strlen = 17;	
 
 	sample_data = "www.";
@@ -155,7 +155,7 @@ begin
 	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
 
 //*******************Test Case 4: All ones *********************//
-	string_in = '1; 
+	flagged_string = '1; 
 	strlen = 17;	
 
 	sample_data = '1;
@@ -166,7 +166,7 @@ begin
 	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
 
 //*******************Test Case 5: All zeroes *******************//
-	string_in = '0; 
+	flagged_string = '0; 
 	strlen = 17;	
 
 	sample_data = '0;
@@ -177,7 +177,7 @@ begin
 	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
 
 //*******************Test Case 6: Start "correct" but change to incorrect in the middle *******************//
-	string_in = "www.google.com"; 
+	flagged_string = "www.google.com"; 
 	strlen = 14;	
 
 	sample_data = "www.";
