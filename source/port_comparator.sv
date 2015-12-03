@@ -1,10 +1,10 @@
-// File name:   ip_comparator.sv
-// Updated:     19 November 2015
+// File name:   port_comparator.sv
+// Updated:     3 December 2015
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
-// Description: Comparator designed for IP address matching based on predefined IP 
-//              address programmed from the Atom.
+// Description: Comparator designed for port matching based on predefined  
+//              flagged ports programmed from the Atom.
 
 module port_comparator
 (
