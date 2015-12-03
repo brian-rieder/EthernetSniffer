@@ -138,34 +138,31 @@ task compare;
 	data_in = 32'h0000; @cb;
 
 	// DATA OUT
-	expected_match = 1'b1;
-	assert(expected_match == cb.m)
-	else $error("2.4: Successful Match: Incorrect Match Flag");
 	@cb;
 	expected_data_out = sample_data;
 	assert(expected_data_out == cb.datao)
-	else $error("2.4: Successful Match: Incorrect Data_Out");
-	expected_match = 1'b0;
-	assert(expected_match == cb.m)
-	else $error("2.4: Successful Match: Incorrect Match Flag");
+	else $error("2.2: Successful Match: Incorrect Data_Out");
 	@cb;
 	expected_data_out = sample_data_2;
 	assert(expected_data_out == cb.datao)
-	else $error("2.5: Successful Match: Incorrect Data_Out");
+	else $error("2.3: Successful Match: Incorrect Data_Out");
 	@cb;
 	expected_data_out = sample_data_3;
 	assert(expected_data_out == cb.datao)
-	else $error("2.6: Successful Match: Incorrect Data_Out");
+	else $error("2.4: Successful Match: Incorrect Data_Out");
 	@cb;
 	expected_data_out = sample_data_4;
 	assert(expected_data_out == cb.datao)
-	else $error("2.7: Successful Match: Incorrect Data_Out");
+	else $error("2.5: Successful Match: Incorrect Data_Out");
 	@cb;
 	expected_data_out = sample_data_5;
 	assert(expected_data_out == cb.datao)
-	else $error("2.8: Successful Match: Incorrect Data_Out");
+	else $error("2.6: Successful Match: Incorrect Data_Out");
+	expected_match = 1'b1;
+	assert(expected_match == cb.m)
+	else $error("2.1: Successful Match: Incorrect Match Flag");
 	
-	@cb; @cb; @cb; @cb;
+	@cb; expected_match = 1'b0; @cb; @cb; @cb;
 	clear = 1'b1; @cb; clear = 1'b0;
 	end	
 endtask
