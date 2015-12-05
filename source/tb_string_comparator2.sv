@@ -91,7 +91,7 @@ begin
 		$stop;
 	end
 
-	for (i = 10320-32; i > 128; i = i - 8) begin
+	for (i = 10320-32; i > 128; i = i - 32) begin
 		sample_data   = live_data [i     +: 32];
 		sample_data_2 = live_data [i-32  +: 32];
 		sample_data_3 = live_data [i-64  +: 32];
