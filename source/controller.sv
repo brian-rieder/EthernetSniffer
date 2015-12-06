@@ -35,7 +35,8 @@ typedef enum logic [3:0] {
 } state_type;
 
 state_type state, next_state;
-reg next_rdreq, /*next_wrreq,*/ next_inc_addr, next_addr, next_clear;
+reg next_rdreq, /*next_wrreq,*/ next_inc_addr, next_addr, next_clear, weighted_match, next_weighted_match;
+reg [63:0] port_hits, ip_hits, mac_hits, url_hits;
 
 // NEXT STATE ASSIGNMENT
 // State diagram must be updated to reflect new flags
@@ -92,7 +93,7 @@ always_comb begin
     end
     
     MATCH_FOUND: begin
-      if(port_match || ip_match || mac_match || url_match) begin
+      if(weighted_match) begin
         next_state = LOAD_MEMORY;
       end
       else begin
@@ -120,6 +121,7 @@ always_comb begin
   next_inc_addr = inc_addr;
   next_addr = addr;
   next_clear = clear;
+  next_weighted_match = 0;
   
   case(next_state)
     RESET: begin
@@ -193,6 +195,11 @@ always_ff @ (posedge clk, negedge n_rst) begin
     inc_addr <= 0;
     addr <= 0;
     clear <= 0;
+    port_hits <= '0;
+    ip_hits <= '0;
+    mac_hits <= '0;
+    url_hits <= '0;
+    weighted_match <= 0;
   end 
   
   else begin
@@ -202,6 +209,7 @@ always_ff @ (posedge clk, negedge n_rst) begin
     inc_addr <= next_inc_addr;
     addr <= next_addr;
     clear <= next_clear;
+    weighted_match
   end
 end
 endmodule
