@@ -27,6 +27,7 @@ module controller
   output reg inc_addr, //signal to address buffer to increment address
   output reg addr, //signal to avalon slave controller
   output reg clear //signal to comparators to clear the match flag
+  //double check the state that the clear flag should be raised in
 );
 
 typedef enum logic [3:0] {
@@ -36,7 +37,7 @@ typedef enum logic [3:0] {
 
 state_type state, next_state;
 reg next_rdreq, /*next_wrreq,*/ next_inc_addr, next_addr, next_clear, weighted_match, next_weighted_match;
-reg [63:0] port_hits, ip_hits, mac_hits, url_hits;
+reg [63:0] port_hits, next_port_hits, ip_hits, next_ip_hits, mac_hits, next_mac_hits, url_hits, next_url_hits;
 
 // NEXT STATE ASSIGNMENT
 // State diagram must be updated to reflect new flags
@@ -122,6 +123,10 @@ always_comb begin
   next_addr = addr;
   next_clear = clear;
   next_weighted_match = 0;
+  next_port_hits = port_hits;
+  next_ip_hits = ip_hits;
+  next_mac_hits = mac_hits;
+  next_url_hits = url_hits;
   
   case(next_state)
     RESET: begin
@@ -158,6 +163,7 @@ always_comb begin
       next_inc_addr = 0;
       next_addr = 0;
       next_clear = 0;
+      next_weighted_match;
     end
     
     MATCH_FOUND: begin
@@ -166,6 +172,20 @@ always_comb begin
       next_inc_addr = 0;
       next_addr = 0;
       next_clear = 1;
+      
+      if(port_match) begin
+        next_port_hits = next_ports_hits + 1;
+      end
+      if(ip_match) begin
+        next_ip_hits = next_ip_hits + 1;
+      end
+      if(mac_match) begin
+        next_mac_hits = next_mac_hits + 1;
+      end
+      if(url_match) begin
+        next_url_hits = next_url_hits + 1;
+      end
+      
     end
     
     LOAD_MEMORY: begin
@@ -209,7 +229,11 @@ always_ff @ (posedge clk, negedge n_rst) begin
     inc_addr <= next_inc_addr;
     addr <= next_addr;
     clear <= next_clear;
-    weighted_match
+    port_hits <= next_port_hits;
+    ip_hits <= next_ip_hits;
+    mac_hits <= next_mac_hits;
+    url_hits <= next_url_hits;
+    weighted_match <= next_weighted_match;
   end
 end
 endmodule
