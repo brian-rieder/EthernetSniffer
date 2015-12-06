@@ -18,8 +18,8 @@ module port_comparator
   output reg [31:0] data_out
 );
 
-reg [31:0] a1, a2 = '0; // four byte comparator buffers
-reg next_match = '0;
+reg [31:0] a1, a2; // four byte comparator buffers
+reg next_match;
 
 always_comb begin
   next_match = match;
