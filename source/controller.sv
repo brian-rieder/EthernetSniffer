@@ -26,7 +26,8 @@ module controller
   //output reg wrreq, //write request signal to Input FIFO
   output reg inc_addr, //signal to address buffer to increment address
   output reg addr, //signal to avalon slave controller
-  output reg clear //signal to comparators to clear the match flag
+  output reg clear, //signal to comparators to clear the match flag
+  output reg [63:0] port_hits, ip_hits, mac_hits, url_hits
   //double check the state that the clear flag should be raised in
 );
 
@@ -37,7 +38,7 @@ typedef enum logic [3:0] {
 
 state_type state, next_state;
 reg next_rdreq, /*next_wrreq,*/ next_inc_addr, next_addr, next_clear, weighted_match, next_weighted_match;
-reg [63:0] port_hits, next_port_hits, ip_hits, next_ip_hits, mac_hits, next_mac_hits, url_hits, next_url_hits;
+reg [63:0] next_port_hits, next_ip_hits, next_mac_hits, next_url_hits;
 
 // NEXT STATE ASSIGNMENT
 // State diagram must be updated to reflect new flags
