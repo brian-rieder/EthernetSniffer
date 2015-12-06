@@ -179,21 +179,21 @@ begin
 	//*******************Test Case 5.1: Two Shift*********************//
 	data_in = sample_data_shift3;
 	expected_match = '0;
-	@cb; //@cb;
+	@cb;
 	assert(expected_match == cb.m)
 	else $error("5.1: Successful Match: Incorrect Match Flag");
 
 	//Test Case 5.2
 	data_in = sample_data_shift3_2;
 	expected_match = 1'b0;
-	@cb; //@cb;
+	@cb;
 	assert(expected_match == cb.m)
 	else $error("5.2: Successful Match: Incorrect Match Flag");
 	
 	//Test Case 5.3
 	data_in = 32'h0000;
 	expected_match = 1'b1;
-	@cb; //@cb;
+	@cb;
 	expected_data_out = sample_data_shift3;
 	@cb;
 	assert(expected_data_out == cb.datao)
@@ -209,7 +209,65 @@ begin
 	assert(expected_data_out == cb.datao)
 	else $error("5.3: Successful Match: Incorrect Data_Out");
 
-	@cb; clear = 1'b1; @cb;
+	@cb; clear = 1'b1; @cb; clear = 1'b0;
+
+//*******************Test Case 6.1: All Ones*********************//
+	flagged_ip = '1;
+	data_in = '1;
+	expected_match = 1'b0;
+	@cb;
+
+	//Test Case 6.2
+	expected_match = 1'b0;
+	@cb;
+	
+	//Test Case 6.3
+	data_in = 32'h0000;
+	expected_match = 1'b1;
+	@cb; expected_data_out = '1; @cb;
+	assert(expected_data_out == cb.datao)
+	else $error("6.1: Successful Match: Incorrect Data_Out");
+	assert(expected_match == cb.m)
+	else $error("6.3: Successful Match: Incorrect Match Flag");
+	
+	@cb;
+	assert(expected_data_out == cb.datao)
+	else $error("6.2: Successful Match: Incorrect Data_Out");
+	
+	@cb; expected_data_out = 32'h0000;
+	assert(expected_data_out == cb.datao)
+	else $error("6.3: Successful Match: Incorrect Data_Out");
+
+	@cb; clear = 1'b1; @cb; clear = 1'b0;
+
+//*******************Test Case 7.1: All Zeros*********************//
+	flagged_ip = '0;
+	data_in = '0;
+	expected_match = 1'b0;
+	@cb;
+
+	//Test Case 7.2
+	expected_match = 1'b0;
+	@cb;
+	
+	//Test Case 7.3
+	data_in = 32'h0000;
+	expected_match = 1'b1;
+	@cb; expected_data_out = '0; @cb;
+	assert(expected_data_out == cb.datao)
+	else $error("7.1: Successful Match: Incorrect Data_Out");
+	assert(expected_match == cb.m)
+	else $error("7.3: Successful Match: Incorrect Match Flag");
+	
+	@cb;
+	assert(expected_data_out == cb.datao)
+	else $error("7.2: Successful Match: Incorrect Data_Out");
+	
+	@cb; expected_data_out = 32'h0000;
+	assert(expected_data_out == cb.datao)
+	else $error("7.3: Successful Match: Incorrect Data_Out");
+
+	@cb; clear = 1'b1; @cb; clear = 1'b0;
 
 	$stop;
 
