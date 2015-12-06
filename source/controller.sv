@@ -12,7 +12,10 @@ module controller
   // port declaration
   input wire clk,
   input wire n_rst,
-  input wire match, //match flag from comparators
+  input wire port_match, //match flag from port comparator
+  input wire ip_match, //match flag from ip comparator
+  input wire mac_match, //match flag from mac comparator
+  input wire url_match, //match flag from string comparator
   input wire shift_enable,
   input wire update_done,
   input wire ready, //ready signal from the MAC
@@ -89,7 +92,7 @@ always_comb begin
     end
     
     MATCH_FOUND: begin
-      if(match) begin
+      if(port_match || ip_match || mac_match || url_match) begin
         next_state = LOAD_MEMORY;
       end
       else begin
@@ -160,7 +163,7 @@ always_comb begin
       //next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 0;
-      next_clear = 0;
+      next_clear = 1;
     end
     
     LOAD_MEMORY: begin
