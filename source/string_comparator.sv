@@ -21,7 +21,7 @@ module string_comparator
 
 reg [7:0] comp_buff [0:19];
 int unsigned i, j;
-reg next_match = 0;
+reg next_match;
 reg [16:0] char_matches_0, char_matches_1, char_matches_2, char_matches_3;
 
 always_comb begin
