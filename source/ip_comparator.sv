@@ -19,7 +19,7 @@ module ip_comparator
 );
 
 reg [31:0] a1, a2 = '0; // four byte comparator buffers
-reg next_match = '0;
+reg next_match;
 
 always_comb begin
   next_match = match;
