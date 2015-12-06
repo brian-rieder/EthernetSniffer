@@ -32,7 +32,7 @@ typedef enum logic [3:0] {
 } state_type;
 
 state_type state, next_state;
-reg next_rdreq, next_wrreq, next_inc_addr, next_addr, next_clear;
+reg next_rdreq, /*next_wrreq,*/ next_inc_addr, next_addr, next_clear;
 
 // NEXT STATE ASSIGNMENT
 // State diagram must be updated to reflect new flags
@@ -113,7 +113,7 @@ end
 // Flags need to be changed
 always_comb begin
   next_rdreq = rdreq;
-  next_wrreq = wrreq;
+  //next_wrreq = wrreq;
   next_inc_addr = inc_addr;
   next_addr = addr;
   next_clear = clear;
@@ -125,7 +125,7 @@ always_comb begin
     
     LOAD_COMP_REG: begin
       next_rdreq = 0;
-      next_wrreq = 0;
+      //next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 1;
       next_clear = 0;
@@ -133,7 +133,7 @@ always_comb begin
     
     IDLE: begin
       next_rdreq = 0;
-      next_wrreq = 0;
+      //next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 0;
       next_clear = 1;
@@ -141,7 +141,7 @@ always_comb begin
     
     LOAD_INPUT_FIFO: begin
       next_rdreq = 1;
-      next_wrreq = 0;
+      //next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 0;
       next_clear = 0;
@@ -149,7 +149,7 @@ always_comb begin
     
     COMPARE: begin
       next_rdreq = 0;
-      next_wrreq = 1;
+      //next_wrreq = 1;
       next_inc_addr = 0;
       next_addr = 0;
       next_clear = 0;
@@ -157,7 +157,7 @@ always_comb begin
     
     MATCH_FOUND: begin
       next_rdreq = 0;
-      next_wrreq = 0;
+      //next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 0;
       next_clear = 0;
@@ -165,7 +165,7 @@ always_comb begin
     
     LOAD_MEMORY: begin
       next_rdreq = 0;
-      next_wrreq = 0;
+      //next_wrreq = 0;
       next_inc_addr = 1;
       next_addr = 0;
       next_clear = 0;
@@ -173,7 +173,7 @@ always_comb begin
     
     ERROR: begin
       next_rdreq = 0;
-      next_wrreq = 0;
+      //next_wrreq = 0;
       next_inc_addr = 0;
       next_addr = 0;
       next_clear = 0;
@@ -186,7 +186,7 @@ always_ff @ (posedge clk, negedge n_rst) begin
   if (!n_rst) begin
     state <= RESET;
     rdreq <= 0;
-    wrreq <= 0;
+    //wrreq <= 0;
     inc_addr <= 0;
     addr <= 0;
     clear <= 0;
@@ -195,7 +195,7 @@ always_ff @ (posedge clk, negedge n_rst) begin
   else begin
     state <= next_state;
     rdreq <= next_rdreq;
-    wrreq <= next_wrreq;
+    //wrreq <= next_wrreq;
     inc_addr <= next_inc_addr;
     addr <= next_addr;
     clear <= next_clear;

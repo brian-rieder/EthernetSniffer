@@ -11,27 +11,26 @@ module tb_ethernetsniffer();
 
 reg clk;
 reg n_rst;
-input wire [31:0] data_in;
-input wire eop;
-input wire empty;
-input wire error;
-input wire valid;
-input wire ready;
-input wire sop;
-input wire rdempty; //from Input FIFO??
-input reg [15:0] flagged_port;
-input reg [31:0] flagged_ip;
-input reg [47:0] flagged_mac;
-input reg [0:16][7:0] flagged_string;
-output wire addr_out;
-output wire wr_en;
-output wire addr_as;
-output wire rdreq;
-output wire [31:0] data_out;
-
+reg [31:0] data_in;
+reg eop;
+reg empty;
+reg error;
+reg valid;
+reg ready;
+reg sop;
+reg rdempty; //from Input FIFO??
+reg [15:0] flagged_port;
+reg [31:0] flagged_ip;
+reg [47:0] flagged_mac;
+reg [0:16][7:0] flagged_string;
+reg [31:0] addr_out;
+reg wr_en;
+reg addr_as;
+reg rdreq;
+reg [31:0] data_out;
 
 reg [31:0] expected_data_out;
-reg expected_addr_out;
+reg [31:0] expected_addr_out;
 reg expected_wr_en;
 reg expected_addr_as;
 reg expected_rdreq;
@@ -42,9 +41,11 @@ reg [31:0] sample_data_2;
 reg [31:0] sample_data_3;
 reg [31:0] sample_data_4;
 reg [31:0] sample_data_5;
+reg clear;
+int unsigned strlen;
 int unsigned i, j;
 
-ethernetsniffer sniff(.clk, .n_rst, .data_in, .eop, .empty, .error, .valid, .ready, .sop, .rdempty, .flagged_port, .flagged_ip, .flagged_mac, .flagged_string);
+ethernetsniffer sniff(.clk, .n_rst, .data_in, .eop, .empty, .error, .valid, .ready, .sop, .rdempty, .flagged_port, .flagged_ip, .flagged_mac, .flagged_string, .data_out, .rdreq, .addr_as, .wr_en, .addr_out);
 
 localparam CLK_PERIOD = 10;
 
@@ -76,25 +77,12 @@ clocking cb @(posedge clk);
 	input wren = wr_en;
 	input addras = addr_as;
 	input rreq = rdreq;
-	input data_o = data_out;
+	input datao = data_out;
 endclocking
 
 initial
 begin
 	//Initializations
-	input wire [31:0] data_in;
-	input wire eop;
-	input wire empty;
-	input wire error;
-	input wire valid;
-	input wire ready;
-	input wire sop;
-	input wire rdempty; //from Input FIFO??
-	input reg [15:0] flagged_port;
-	input reg [31:0] flagged_ip;
-	input reg [47:0] flagged_mac;
-	input reg [0:16][7:0] flagged_string;
-
 	n_rst = 1'b1;
 	strlen = 14;
 	sample_data = 32'h0000;
@@ -104,18 +92,35 @@ begin
 	sample_data_5 = 32'h0000;
 	data_in = 32'h0000;
 	flagged_string = 32'h0000;
-	clear = '0;
+	flagged_ip = 32'h0000;
+	flagged_port = 16'h00;
+	flagged_mac = 48'h000000;
+	eop = 1'b0;
+	empty = 1'b0;
+	error = 1'b0;
+	valid = 1'b0;
+	ready = 1'b0;
+	sop = 1'b0;
+	rdempty = 1'b0;
 
 	//Reset Test Case
 	cb.n_rst <= 1'b1;
 	@cb; n_rst = 1'b0; @cb;
-	expected_data_out = '0;
-	expected_match = '0;
+	expected_data_out = 32'h000;
+	expected_addr_out = 1'b0;
+	expected_wr_en = 1'b0;
+	expected_addr_as = 1'b0;
+	expected_rdreq = 1'b0;
 	assert(expected_data_out == cb.datao)
 	else $error("1: Reset Test Case: Incorrect Data_Out");
-	assert(expected_match == cb.m)
-	else $error("1: Reset Test Case: Incorrect Match Flag");
-	cb.n_rst <= 1'b1;
+	assert(expected_addr_out == cb.aout)
+	else $error("1: Reset Test Case: Incorrect addr_out");
+	assert(expected_wr_en == cb.wren)
+	else $error("1: Reset Test Case: Incorrect write enable");
+	assert(expected_addr_as == cb.addras)
+	else $error("1: Reset Test Case: Incorrect addr_as");
+	assert(expected_rdreq == cb.rreq)
+	else $error("1: Reset Test Case: Incorrect rdreq");
 	@cb; @cb;
 
 	@cb; clear = 1'b1; @cb; clear = 1'b0;
@@ -137,7 +142,7 @@ begin
 		sample_data_3 = live_data [i-64  +: 32];
 		sample_data_4 = live_data [i-96  +: 32];
 		sample_data_5 = live_data [i-128 +: 32];
-		compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b0);
+		compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5);
 	end
 
 	$stop;
@@ -150,11 +155,9 @@ task compare;
 	input [31:0] sample_data_3;
 	input [31:0] sample_data_4;
 	input [31:0] sample_data_5;
-	input reg expected_matchFlag;
 	begin
 	data_in = sample_data; 
 	expected_data_out = 32'h0000;
-	expected_match = '0;
 	@cb;
 
 	data_in = sample_data_2; @cb;
@@ -188,11 +191,8 @@ task compare;
 	expected_data_out = sample_data_5;
 	assert(expected_data_out == cb.datao)
 	else $error("2.6: Incorrect Data_Out");
-	expected_match = expected_matchFlag;
-	assert(expected_match == cb.m)
-	else $error("2.7: Incorrect Match Flag");
 	
-	@cb; expected_match = 1'b0; @cb; @cb; @cb;
+	@cb; @cb; @cb; @cb;
 	clear = 1'b1; @cb; clear = 1'b0;
 	end	
 endtask
