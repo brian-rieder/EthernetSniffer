@@ -28,10 +28,10 @@ always_comb begin
   next_match = match;
   char_matches_0 = '0; char_matches_1 = '0; char_matches_2 = '0; char_matches_3 = '0;
   for(j = 0; j < 17; j = j + 1) begin
-    char_matches_0[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[19 - j] == flagged_string[j]))?1:0;
-    char_matches_1[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[18 - j] == flagged_string[j]))?1:0;
-    char_matches_2[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[17 - j] == flagged_string[j]))?1:0;
-    char_matches_3[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[16 - j] == flagged_string[j]))?1:0;
+    char_matches_0[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[19 - j] == flagged_string[j]))?1'b1:1'b0;
+    char_matches_1[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[18 - j] == flagged_string[j]))?1'b1:1'b0;
+    char_matches_2[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[17 - j] == flagged_string[j]))?1'b1:1'b0;
+    char_matches_3[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[16 - j] == flagged_string[j]))?1'b1:1'b0;
   end
 
   if (char_matches_0 == '1 || char_matches_1 == '1 || char_matches_2 == '1 || char_matches_3 == '1) begin

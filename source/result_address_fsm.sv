@@ -85,6 +85,7 @@ end
 // note: the current values are multiples of 1550
 always_comb begin
   next_addr_out = addr_out;
+  next_write_enable = write_enable;
   case(nextstate)
     ADDR1: begin
       next_addr_out = 32'h0000; // 0
