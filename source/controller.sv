@@ -13,20 +13,20 @@ module controller
   input wire clk,
   input wire n_rst,
   input wire port_match, //match flag from port comparator
-  input wire ip_match, //match flag from ip comparator
-  input wire mac_match, //match flag from mac comparator
-  input wire url_match, //match flag from string comparator
+  input wire ip_match,   //match flag from ip comparator
+  input wire mac_match,  //match flag from mac comparator
+  input wire url_match,  //match flag from string comparator
   input wire shift_enable,
   input wire update_done,
-  input wire ready, //ready signal from the MAC
-  input wire eop, //eop from MAC
-  input wire error, //error from MAC
-  input wire rdempty, //empty signal from Input FIFO
-  output reg rdreq, //read request signal to Input FIFO
-  //output reg wrreq, //write request signal to Input FIFO
-  output reg inc_addr, //signal to address buffer to increment address
-  output reg addr, //signal to avalon slave controller
-  output reg clear, //signal to comparators to clear the match flag
+  input wire ready, 	//ready signal from the MAC
+  input wire eop, 	//eop from MAC
+  input wire error, 	//error from MAC
+  input wire rdempty, 	//empty signal from Input FIFO
+  output reg rdreq, 	//read request signal to Input FIFO
+  //output reg wrreq, 	//write request signal to Input FIFO
+  output reg inc_addr, 	//signal to address buffer to increment address
+  output reg addr, 	//signal to avalon slave controller
+  output reg clear, 	//signal to comparators to clear the match flag
   output reg [63:0] port_hits, ip_hits, mac_hits, url_hits
   //double check the state that the clear flag should be raised in
 );
@@ -164,7 +164,7 @@ always_comb begin
       next_inc_addr = 0;
       next_addr = 0;
       next_clear = 0;
-      next_weighted_match;
+      next_weighted_match = 0;
     end
     
     MATCH_FOUND: begin
@@ -175,7 +175,7 @@ always_comb begin
       next_clear = 1;
       
       if(port_match) begin
-        next_port_hits = next_ports_hits + 1;
+        next_port_hits = next_port_hits + 1;
       end
       if(ip_match) begin
         next_ip_hits = next_ip_hits + 1;
