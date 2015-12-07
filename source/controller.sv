@@ -16,8 +16,8 @@ module controller
   input wire ip_match,   //match flag from ip comparator
   input wire mac_match,  //match flag from mac comparator
   input wire url_match,  //match flag from string comparator
-  input wire shift_enable,
-  input wire update_done,
+  input wire shift_enable,	//??From "valid" signal from MAC fifo
+  input wire update_done,	//??from Avalon Slave
   input wire ready, 	//ready signal from the MAC
   input wire eop, 	//eop from MAC
   input wire error, 	//error from MAC
