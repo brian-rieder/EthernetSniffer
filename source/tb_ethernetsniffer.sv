@@ -189,24 +189,27 @@ task compare;
 	data_in = sample_data_3; @cb;
 
 	data_in = sample_data_4; @cb;
-	
-	data_in = sample_data_5; @cb;
-
-	data_in = 32'h0000; @cb;
-
 	// DATA OUT
-	@cb;
+	//@cb;
 	expected_data_out = sample_data;
 	assert(expected_data_out == cb.datao)
 	else $error("2.2: Incorrect Data_Out");
-	@cb;
+	data_in = sample_data_5; @cb;
+	
+
+	//@cb;
 	expected_data_out = sample_data_2;
 	assert(expected_data_out == cb.datao)
 	else $error("2.3:Incorrect Data_Out");
-	@cb;
+	data_in = 32'h0000; @cb;
+
+
+	//@cb;
 	expected_data_out = sample_data_3;
 	assert(expected_data_out == cb.datao)
 	else $error("2.4:Incorrect Data_Out");
+
+
 	@cb;
 	expected_data_out = sample_data_4;
 	assert(expected_data_out == cb.datao)
