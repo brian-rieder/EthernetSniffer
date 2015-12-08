@@ -64,7 +64,7 @@ always_comb begin
     end
     
     LOAD_INPUT_FIFO: begin
-      if(eop) begin
+      if(eop) begin //FIX ME!!! 
         next_state = COMPARE;
       end
       
