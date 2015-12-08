@@ -40,6 +40,8 @@ typedef enum logic [3:0] {
 state_type state, next_state;
 reg next_rdreq, /*next_wrreq,*/ next_inc_addr, next_addr, next_clear, weighted_match, next_weighted_match;
 reg [63:0] next_port_hits, next_ip_hits, next_mac_hits, next_url_hits;
+reg [2:0] counter, next_counter;
+reg [3:0] wmatch;
 
 // NEXT STATE ASSIGNMENT
 // State diagram must be updated to reflect new flags
@@ -64,7 +66,7 @@ always_comb begin
     end
     
     LOAD_INPUT_FIFO: begin
-      if(eop) begin //FIX ME!!! 
+      if(counter) begin //FIX ME!!! 
         next_state = COMPARE;
       end
       
@@ -124,11 +126,11 @@ always_comb begin
   next_inc_addr = inc_addr;
   next_addr = addr;
   next_clear = clear;
-  next_weighted_match = 0;
   next_port_hits = port_hits;
   next_ip_hits = ip_hits;
   next_mac_hits = mac_hits;
   next_url_hits = url_hits;
+  next_counter = counter;
   
   case(next_state)
     RESET: begin
@@ -165,7 +167,6 @@ always_comb begin
       next_inc_addr = 0;
       next_addr = 0;
       next_clear = 0;
-      next_weighted_match = 0;
     end
     
     MATCH_FOUND: begin
@@ -174,6 +175,10 @@ always_comb begin
       next_inc_addr = 0;
       next_addr = 0;
       next_clear = 1;
+      
+      if(counter) begin
+        next_counter = next_counter - 1;
+      end
       
       if(port_match) begin
         next_port_hits = next_port_hits + 1;
@@ -206,6 +211,20 @@ always_comb begin
       next_clear = 0;
     end
   endcase
+  
+  if(eop) begin
+    next_counter = next_counter + 1;
+  end
+end
+
+//weighting and eop counter
+always_comb begin
+  next_weighted_match = 0;
+  
+  wmatch = port_match*2 + ip_match*2 + mac_match*1 + url_match*4;
+  if(wmatch >= 4)begin
+    next_weighted_match = 1;
+  end
 end
 
 // STATE REGISTERING
@@ -222,6 +241,7 @@ always_ff @ (posedge clk, negedge n_rst) begin
     mac_hits <= '0;
     url_hits <= '0;
     weighted_match <= 0;
+    counter <= 0;
   end 
   
   else begin
@@ -236,6 +256,7 @@ always_ff @ (posedge clk, negedge n_rst) begin
     mac_hits <= next_mac_hits;
     url_hits <= next_url_hits;
     weighted_match <= next_weighted_match;
+    counter <= next_counter;
   end
 end
 endmodule
