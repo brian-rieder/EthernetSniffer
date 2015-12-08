@@ -66,7 +66,7 @@ always_comb begin
     end
     
     LOAD_INPUT_FIFO: begin
-      if(counter) begin //FIX ME!!! 
+      if(counter > '0) begin 
         next_state = COMPARE;
       end
       
@@ -176,7 +176,7 @@ always_comb begin
       next_addr = 0;
       next_clear = 1;
       
-      if(counter) begin
+      if(counter > '0) begin
         next_counter = next_counter - 1;
       end
       
@@ -217,7 +217,7 @@ always_comb begin
   end
 end
 
-//weighting and eop counter
+//weighting
 always_comb begin
   next_weighted_match = 0;
   
