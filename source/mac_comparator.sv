@@ -20,7 +20,6 @@ module mac_comparator
 
 reg [31:0] a1, a2, a3; // four byte comparator buffers
 reg next_match;
-next_match = 0;
 
 always_comb begin
   next_match = match;
