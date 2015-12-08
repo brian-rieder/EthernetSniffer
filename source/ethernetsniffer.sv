@@ -23,7 +23,7 @@ input reg [47:0] flagged_mac,
 input reg [0:16][7:0] flagged_string,
 input reg update_done, //from A/S
 output wire [31:0] addr_out,
-output wire wr_en,
+output wire write_enable,
 output wire addr_as,
 output wire rdreq,
 output wire [31:0] data_out,
@@ -36,7 +36,6 @@ wire mac_match;
 wire ip_match;
 wire port_match;
 wire inc_addr;
-wire write_enable;
 
 string_comparator SC(.clk, .n_rst, .clear, .flagged_string, .strlen, .data_in, .match(url_match), .data_out());
 
