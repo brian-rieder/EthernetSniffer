@@ -21,11 +21,13 @@ input reg [15:0] flagged_port,
 input reg [31:0] flagged_ip,
 input reg [47:0] flagged_mac,
 input reg [0:16][7:0] flagged_string,
+input reg update_done, //from A/S
 output wire [31:0] addr_out,
 output wire wr_en,
 output wire addr_as,
 output wire rdreq,
-output wire [31:0] data_out);
+output wire [31:0] data_out,
+output reg [63:0] port_hits, ip_hits, mac_hits, url_hits);
 
 wire clear;
 wire [4:0] strlen;
@@ -46,6 +48,6 @@ port_comparator PC (.clk, .n_rst, .clear, .flagged_port, .data_in, .match(port_m
 
 result_address_fsm RAFSM (.clk, .n_rst, .inc_addr, .addr_out, .write_enable);
 
-controller CTRLR (.clk, .n_rst, .url_match, .port_match, .mac_match, .ip_match, .shift_enable(valid), .update_done (eop), .ready, .eop, .error, .rdempty, .rdreq, .inc_addr, .addr(addr_as), .clear);
+controller CTRLR (.clk, .n_rst, .url_match, .port_match, .mac_match, .ip_match, .update_done, .ready, .valid, .eop, .error, .rdempty, .rdreq, .inc_addr, .addr(addr_as), .port_hits, .ip_hits, .mac_hits, .url_hits, .clear);
 
 endmodule

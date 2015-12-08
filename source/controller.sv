@@ -16,11 +16,12 @@ module controller
   input wire ip_match,   //match flag from ip comparator
   input wire mac_match,  //match flag from mac comparator
   input wire url_match,  //match flag from string comparator
-  input wire shift_enable,	//??From "valid" signal from MAC fifo
+  //input wire shift_enable,	//??From "valid" signal from MAC fifo
   input wire update_done,	//??from Avalon Slave
   input wire ready, 	//ready signal from the MAC
   input wire eop, 	//eop from MAC
   input wire error, 	//error from MAC
+  input wire valid,	//Used with ready to signify good packet
   input wire rdempty, 	//empty signal from Input FIFO
   output reg rdreq, 	//read request signal to Input FIFO
   //output reg wrreq, 	//write request signal to Input FIFO
@@ -57,7 +58,7 @@ always_comb begin
     end
     
     IDLE: begin
-      if(ready) begin
+      if(ready & valid) begin
         next_state = LOAD_INPUT_FIFO;
       end
     end
