@@ -38,16 +38,16 @@ wire port_match;
 wire inc_addr;
 
 //Should data out have something? Even a dummy value? I took them out because it was affecting the test bench.
-string_comparator SC(.clk, .n_rst, .clear, .flagged_string, .strlen, .data_in, .match(url_match), .data_out());
+string_comparator SC(.clk, .n_rst, .clear(clear), .flagged_string, .strlen, .data_in, .match(url_match), .data_out());
 
-mac_comparator MC (.clk, .n_rst, .clear, .flagged_mac, .data_in, .match(mac_match), .data_out);
+mac_comparator MC (.clk, .n_rst, .clear(clear), .flagged_mac, .data_in, .match(mac_match), .data_out);
 
-ip_comparator IC (.clk, .n_rst, .clear, .flagged_ip, .data_in, .match(ip_match), .data_out());
+ip_comparator IC (.clk, .n_rst, .clear(clear), .flagged_ip, .data_in, .match(ip_match), .data_out());
 
-port_comparator PC (.clk, .n_rst, .clear, .flagged_port, .data_in, .match(port_match), .data_out());
+port_comparator PC (.clk, .n_rst, .clear(clear), .flagged_port, .data_in, .match(port_match), .data_out());
 
 result_address_fsm RAFSM (.clk, .n_rst, .inc_addr, .addr_out, .write_enable);
 
-controller CTRLR (.clk, .n_rst, .url_match, .port_match, .mac_match, .ip_match, .update_done, .ready, .valid, .eop, .error, .rdempty, .rdreq, .inc_addr, .addr(addr_as), .port_hits, .ip_hits, .mac_hits, .url_hits, .clear);
+controller CTRLR (.clk, .n_rst, .url_match, .port_match, .mac_match, .ip_match, .update_done, .ready, .valid, .eop, .error, .rdempty, .rdreq, .inc_addr, .addr(addr_as), .port_hits, .ip_hits, .mac_hits, .url_hits, .clear(clear), .sop);
 
 endmodule
