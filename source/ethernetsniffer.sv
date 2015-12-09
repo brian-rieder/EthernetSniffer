@@ -48,6 +48,6 @@ port_comparator PC (.clk, .n_rst, .clear(clear), .flagged_port, .data_in, .match
 
 result_address_fsm RAFSM (.clk, .n_rst, .inc_addr, .addr_out, .write_enable);
 
-controller CTRLR (.clk, .n_rst, .url_match, .port_match, .mac_match, .ip_match, .update_done, .ready, .valid, .eop, .error, .rdempty, .rdreq, .inc_addr, .addr(addr_as), .port_hits, .ip_hits, .mac_hits, .url_hits, .clear(clear), .sop);
+controller CTRLR (.clk, .n_rst, .url_match(url_match), .port_match(port_match), .mac_match(mac_match), .ip_match(ip_match), .update_done, .ready, .valid, .eop, .error, .rdempty, .rdreq, .inc_addr, .addr(addr_as), .port_hits, .ip_hits, .mac_hits, .url_hits, .clear(clear), .sop);
 
 endmodule
