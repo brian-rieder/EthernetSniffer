@@ -28,15 +28,15 @@ always_comb begin
     next_match = 1;
   end
   // shifted one over
-  else if (flagged_ip == {a1[7:0], a2[31:8]}) begin
+  else if (flagged_ip == {a2[7:0], a1[31:8]}) begin //a1[7:0], a2[31:8]}
     next_match = 1;
   end
   // shifted two over
-  else if (flagged_ip== {a1[15:0], a2[31:16]}) begin
+  else if (flagged_ip== {a2[15:0], a1[31:16]}) begin //a1[15:0], a2[31:16]
     next_match = 1;
   end
   // shifted three over
-  else if (flagged_ip == {a1[23:0], a2[31:24]}) begin
+  else if (flagged_ip == {a2[23:0], a1[31:24]}) begin // {a1[23:0], a2[31:24]}
     next_match = 1;
   end
 end
