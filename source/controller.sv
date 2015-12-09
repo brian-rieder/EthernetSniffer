@@ -76,9 +76,12 @@ always_comb begin
     end
     
     COMPARE: begin
-      if(rdempty) begin
+      // BPR: we won't receive rdempty if the FIFO is being written to, it will never
+      // be completely empty. This signal was being treated as "devoid of previous packet"
+      // CEC: what he said
+      // if(rdempty) begin
         next_state = WAIT1;
-      end
+      // end
     end
     
     WAIT1: begin
