@@ -8,3 +8,11 @@ included_files=( "$q_dir/master_example.sv" "$q_dir/custom_slave.sv" "$q_dir/lin
 for f in "${included_files[@]}" ; do
    cp $f .
 done
+
+git add .
+
+echo "Enter your commit message: "
+read commit_message
+
+git commit -m "$commit_message" .
+git push .
