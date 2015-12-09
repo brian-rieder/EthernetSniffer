@@ -35,7 +35,7 @@ always_comb begin
   end
 
   if (char_matches_0 == '1 || char_matches_1 == '1 || char_matches_2 == '1 || char_matches_3 == '1) begin
-	next_match = 1'b1;
+    next_match = 1'b1;
   end
 end
 
