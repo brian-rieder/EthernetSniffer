@@ -105,14 +105,14 @@ begin
 	@cb; clear = 1'b1; @cb; clear = 1'b0;
 
 	//*******************Test Case 3.1: One Shift*********************//
-	data_in = sample_data_shift1;
+	data_in = sample_data_shift1_2;
 	expected_match = '0;
 	@cb;
 	assert(expected_match == cb.m)
 	else $error("3.1: Successful Match: Incorrect Match Flag");
 
 	//Test Case 3.2
-	data_in = sample_data_shift1_2;
+	data_in = sample_data_shift1;
 	expected_match = 1'b0;
 	@cb;
 	assert(expected_match == cb.m)
@@ -121,7 +121,7 @@ begin
 	//Test Case 3.3
 	data_in = 32'h0000;
 	@cb;
-	expected_data_out = sample_data_shift1;
+	expected_data_out = sample_data_shift1_2;
 	expected_match = 1'b1;
 	@cb;
 	assert(expected_data_out == cb.datao)
@@ -131,7 +131,7 @@ begin
 	
 
 	@cb; 
-	expected_data_out = sample_data_shift1_2;
+	expected_data_out = sample_data_shift1;
 	assert(expected_data_out == cb.datao)
 	else $error("3.2: Successful Match: Incorrect Data_Out");
 	
@@ -142,14 +142,14 @@ begin
 	@cb; clear = 1'b1; @cb; clear = 1'b0;
 
 	//*******************Test Case 4.1: Two Shift*********************//
-	data_in = sample_data_shift2;
+	data_in = sample_data_shift2_2;
 	expected_match = '0;
 	@cb; 
 	assert(expected_match == cb.m)
 	else $error("4.1: Successful Match: Incorrect Match Flag");
 
 	//Test Case 4.2
-	data_in = sample_data_shift2_2;
+	data_in = sample_data_shift2;
 	expected_match = 1'b0;
 	@cb; //@cb;
 	assert(expected_match == cb.m)
@@ -159,14 +159,14 @@ begin
 	data_in = 32'h0000;
 	expected_match = 1'b1;
 	@cb; //@cb;
-	expected_data_out = sample_data_shift2;
+	expected_data_out = sample_data_shift2_2;
 	@cb;
 	assert(expected_data_out == cb.datao)
 	else $error("4.1: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("4.3: Successful Match: Incorrect Match Flag");
 	
-	@cb; expected_data_out = sample_data_shift2_2;
+	@cb; expected_data_out = sample_data_shift2;
 	assert(expected_data_out == cb.datao)
 	else $error("4.2: Successful Match: Incorrect Data_Out");
 
@@ -177,14 +177,14 @@ begin
 	@cb; clear = 1'b1; @cb; clear = 1'b0;
 
 	//*******************Test Case 5.1: Two Shift*********************//
-	data_in = sample_data_shift3;
+	data_in = sample_data_shift3_2;
 	expected_match = '0;
 	@cb;
 	assert(expected_match == cb.m)
 	else $error("5.1: Successful Match: Incorrect Match Flag");
 
 	//Test Case 5.2
-	data_in = sample_data_shift3_2;
+	data_in = sample_data_shift3;
 	expected_match = 1'b0;
 	@cb;
 	assert(expected_match == cb.m)
@@ -194,14 +194,14 @@ begin
 	data_in = 32'h0000;
 	expected_match = 1'b1;
 	@cb;
-	expected_data_out = sample_data_shift3;
+	expected_data_out = sample_data_shift3_2;
 	@cb;
 	assert(expected_data_out == cb.datao)
 	else $error("5.1: Successful Match: Incorrect Data_Out");
 	assert(expected_match == cb.m)
 	else $error("5.3: Successful Match: Incorrect Match Flag");
 	
-	@cb; expected_data_out = sample_data_shift3_2;
+	@cb; expected_data_out = sample_data_shift3;
 	assert(expected_data_out == cb.datao)
 	else $error("5.2: Successful Match: Incorrect Data_Out");
 	
