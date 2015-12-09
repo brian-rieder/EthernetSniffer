@@ -91,6 +91,7 @@ always_comb begin
       // end
       if(eop) begin
         next_state = WAIT1;
+      end
       else if(error) begin
         next_state = ERROR;
       end
