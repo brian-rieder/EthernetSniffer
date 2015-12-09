@@ -40,7 +40,7 @@ typedef enum logic [3:0] {
 state_type state, next_state;
 reg next_rdreq, /*next_wrreq,*/ next_inc_addr, next_addr, next_clear, weighted_match, next_weighted_match;
 reg [63:0] next_port_hits, next_ip_hits, next_mac_hits, next_url_hits;
-reg [2:0] counter, next_counter;
+// reg [2:0] counter, next_counter;
 reg [3:0] wmatch;
 
 // NEXT STATE ASSIGNMENT
@@ -60,28 +60,39 @@ always_comb begin
     end
     
     IDLE: begin
-      if(ready & valid) begin
-        next_state = LOAD_INPUT_FIFO;
+      // if(ready & valid) begin
+      //   next_state = LOAD_INPUT_FIFO;
+      // end
+      if(sop & ready & valid) begin
+        next_state = COMPARE;
       end
     end
     
-    LOAD_INPUT_FIFO: begin
-      if(counter > '0) begin 
-        next_state = COMPARE;
-      end
+    // LOAD_INPUT_FIFO: begin
+    //   // if(counter > '0) begin 
+    //     // next_state = COMPARE;
+    //   // end
+    //   if(eop) begin
+    //     next_state = COMPARE;
+    //   end
       
-      else if(error) begin
-        next_state = ERROR;
-      end
-    end
+    //   else if(error) begin
+    //     next_state = ERROR;
+    //   end
+    // end
     
     COMPARE: begin
       // BPR: we won't receive rdempty if the FIFO is being written to, it will never
       // be completely empty. This signal was being treated as "devoid of previous packet"
       // CEC: what he said
       // if(rdempty) begin
-        next_state = WAIT1;
+        // next_state = WAIT1;
       // end
+      if(eop) begin
+        next_state = WAIT1;
+      else if(error) begin
+        next_state = ERROR;
+      end
     end
     
     WAIT1: begin
@@ -133,7 +144,7 @@ always_comb begin
   next_ip_hits = ip_hits;
   next_mac_hits = mac_hits;
   next_url_hits = url_hits;
-  next_counter = counter;
+  // next_counter = counter;
   
   case(next_state)
     RESET: begin
@@ -156,13 +167,13 @@ always_comb begin
       next_clear = 1;
     end
     
-    LOAD_INPUT_FIFO: begin
-      next_rdreq = 1;
-      //next_wrreq = 0;
-      next_inc_addr = 0;
-      next_addr = 0;
-      next_clear = 0;
-    end
+    // LOAD_INPUT_FIFO: begin
+    //   next_rdreq = 1;
+    //   //next_wrreq = 0;
+    //   next_inc_addr = 0;
+    //   next_addr = 0;
+    //   next_clear = 0;
+    // end
     
     COMPARE: begin
       next_rdreq = 0;
@@ -179,9 +190,9 @@ always_comb begin
       next_addr = 0;
       next_clear = 1;
       
-      if(counter > '0) begin
-        next_counter = next_counter - 1;
-      end
+      // if(counter > '0) begin
+      //   next_counter = next_counter - 1;
+      // end
       
       if(port_match) begin
         next_port_hits = next_port_hits + 1;
@@ -215,9 +226,9 @@ always_comb begin
     end
   endcase
   
-  if(eop) begin
-    next_counter = next_counter + 1;
-  end
+  // if(eop) begin
+    // next_counter = next_counter + 1;
+  // end
 end
 
 //weighting
@@ -244,7 +255,7 @@ always_ff @ (posedge clk, negedge n_rst) begin
     mac_hits <= '0;
     url_hits <= '0;
     weighted_match <= 0;
-    counter <= 0;
+    // counter <= 0;
   end 
   
   else begin
@@ -259,7 +270,7 @@ always_ff @ (posedge clk, negedge n_rst) begin
     mac_hits <= next_mac_hits;
     url_hits <= next_url_hits;
     weighted_match <= next_weighted_match;
-    counter <= next_counter;
+    // counter <= next_counter;
   end
 end
 endmodule
