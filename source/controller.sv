@@ -16,20 +16,16 @@ module controller
   input wire ip_match,   //match flag from ip comparator
   input wire mac_match,  //match flag from mac comparator
   input wire url_match,  //match flag from string comparator
-  //input wire shift_enable,	//??From "valid" signal from MAC fifo
   input wire update_done,	//??from Avalon Slave
-  input wire ready, 	//ready signal from the MAC
   input wire sop,   //sop from MAC
   input wire eop, 	//eop from MAC
   input wire [5:0] error, 	//error from MAC
   input wire valid,	//Used with ready to signify good packet
-  input wire rdempty, 	//empty signal from Input FIFO
-  output reg rdreq, 	//read request signal to Input FIFO
-  //output reg wrreq, 	//write request signal to Input FIFO
+  input wire [1:0] empty, 	//empty signal from Input FIFO
+  output wire ready, 	//ready signal to the Input FIFO
   output reg inc_addr, 	//signal to address buffer to increment address
   output reg clear, 	//signal to comparators to clear the match flag
-  output reg [63:0] port_hits, ip_hits, mac_hits, url_hits
-  //double check the state that the clear flag should be raised in
+  output reg [63:0] port_hits, ip_hits, mac_hits, url_hits //registers to hold the hit counts
 );
 
 typedef enum logic [3:0] {
@@ -38,13 +34,12 @@ typedef enum logic [3:0] {
 } state_type;
 
 state_type state, next_state;
-reg next_rdreq, /*next_wrreq,*/ next_inc_addr, next_clear, weighted_match, next_weighted_match;
+reg next_inc_addr, next_clear, weighted_match, next_weighted_match, ready, next_ready;
 reg [63:0] next_port_hits, next_ip_hits, next_mac_hits, next_url_hits;
 // reg [2:0] counter, next_counter;
 reg [3:0] wmatch;
 
 // NEXT STATE ASSIGNMENT
-// State diagram must be updated to reflect new flags
 always_comb begin
   next_state = state;
   
@@ -60,10 +55,7 @@ always_comb begin
     end
     
     IDLE: begin
-      // if(ready & valid) begin
-      //   next_state = LOAD_INPUT_FIFO;
-      // end
-      if(sop & ready & valid) begin
+      if(sop & valid) begin
         next_state = COMPARE;
       end
     end
@@ -136,52 +128,64 @@ end
 // OUTPUT ASSIGNMENT
 // Flags need to be changed
 always_comb begin
-  next_rdreq = rdreq;
-  //next_wrreq = wrreq;
   next_inc_addr = inc_addr;
   next_clear = clear;
   next_port_hits = port_hits;
   next_ip_hits = ip_hits;
   next_mac_hits = mac_hits;
   next_url_hits = url_hits;
+  next_ready = ready;
   // next_counter = counter;
   
   case(next_state)
     RESET: begin
-
     end
     
     LOAD_COMP_REG: begin
-      next_rdreq = 0;
-      //next_wrreq = 0;
       next_inc_addr = 0;
       next_clear = 0;
+      next_ready = 0;
     end
     
     IDLE: begin
-      next_rdreq = 0;
-      //next_wrreq = 0;
       next_inc_addr = 0;
       next_clear = 1;
+      if(empty < 3) begin
+        next_ready = 1;
+      end
     end
     
-    // LOAD_INPUT_FIFO: begin
-    //   next_rdreq = 1;
-    //   //next_wrreq = 0;
-    //   next_inc_addr = 0;
-    //   next_clear = 0;
-    // end
-    
     COMPARE: begin
-      next_rdreq = 0;
-      //next_wrreq = 1;
       next_inc_addr = 0;
       next_clear = 0;
+      next_ready = 1;
+    end
+    
+    WAIT1: begin
+      next_inc_addr = 0;
+      next_clear = 0;
+      next_ready = 0;
+    end
+    
+    WAIT2: begin
+      next_inc_addr = 0;
+      next_clear = 0;
+      next_ready = 0;
+    end
+    
+    WAIT3: begin
+      next_inc_addr = 0;
+      next_clear = 0;
+      next_ready = 0;
+    end
+    
+    WAIT4: begin
+      next_inc_addr = 0;
+      next_clear = 0;
+      next_ready = 0;
     end
     
     MATCH_FOUND: begin
-      next_rdreq = 0;
-      //next_wrreq = 0;
       next_inc_addr = 0;
       next_clear = 1;
       
@@ -205,17 +209,15 @@ always_comb begin
     end
     
     LOAD_MEMORY: begin
-      next_rdreq = 0;
-      //next_wrreq = 0;
       next_inc_addr = 1;
       next_clear = 0;
+      next_ready = 0;
     end
     
     ERROR: begin
-      next_rdreq = 0;
-      //next_wrreq = 0;
       next_inc_addr = 0;
       next_clear = 0;
+      next_ready = 1;
     end
   endcase
   
@@ -224,7 +226,7 @@ always_comb begin
   // end
 end
 
-//weighting
+//WEIGHTING
 always_comb begin
   next_weighted_match = 0;
   
@@ -238,8 +240,7 @@ end
 always_ff @ (posedge clk, negedge n_rst) begin
   if (!n_rst) begin
     state <= RESET;
-    rdreq <= 0;
-    //wrreq <= 0;
+    ready <= 0;
     inc_addr <= 0;
     clear <= 0;
     port_hits <= '0;
@@ -252,8 +253,7 @@ always_ff @ (posedge clk, negedge n_rst) begin
   
   else begin
     state <= next_state;
-    rdreq <= next_rdreq;
-    //wrreq <= next_wrreq;
+    ready <= next_ready;
     inc_addr <= next_inc_addr;
     clear <= next_clear;
     port_hits <= next_port_hits;
