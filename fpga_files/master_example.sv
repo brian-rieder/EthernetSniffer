@@ -76,12 +76,12 @@ assign soc_clk = CLOCK_50;
 
 assign DRAM_CLK = CLOCK_50;
 	
-always_ff @(posedge CLOCK_50) begin
-	if(!KEY[0]) begin
-		LEDG <= 0; 
-	end else begin
-	end
-end	
+// always_ff @(posedge CLOCK_50) begin
+// 	if(!KEY[0]) begin
+// 		LEDG <= 0; 
+// 	end else begin
+// 	end
+// end	
 
 //IB//amm_master_qsys_custom_with_bfm u0 (
 //IB//        .clk_clk                            (soc_clk), 
@@ -171,49 +171,14 @@ mii_pll	mii_pll_inst (
 //     .rx_rst_reset_n                              ()
 // );
 
-amm_master_qsys_with_pcie u0 (
-    .clk_clk                                     (CLOCK_50),
-    .reset_reset_n                               (KEY[0]),
-    .pcie_ip_refclk_export                       (PCIE_REFCLK_P),
-    .pcie_ip_pcie_rstn_export                    (PCIE_PERST_N),
-    .pcie_ip_rx_in_rx_datain_0                   (PCIE_RX_P),
-    .pcie_ip_tx_out_tx_dataout_0                 (PCIE_TX_P),
-
-    .mac_misc_ff_tx_crc_fwd                     (0), // If this signal is set to 1, the user application is expected to provide the CRC.
-    // these signals are potentially unused? these are FIFO status signals
-    .mac_misc_ff_tx_septy                       (),
-    .mac_misc_tx_ff_uflow                       (),
-    .mac_misc_ff_tx_a_full                      (),
-    .mac_misc_ff_tx_a_empty                     (),
-    .mac_misc_rx_err_stat                       (),
-    .mac_misc_rx_frm_type                       (),
-    .mac_misc_ff_rx_dsav                        (),
-    .mac_misc_ff_rx_a_full                      (),
-    .mac_misc_ff_rx_a_empty                     (),
-    .mac_rx_clk_clk                             (),
-    .mac_tx_clk_clk                             (),
-
-    .rgmii_status_set_10                        (0),
-    .rgmii_status_set_1000                      (0),
-    .rgmii_status_eth_mode                      (), // clock divider?
-    .rgmii_status_ena_10                        (0), // clock divider? note: this could be wrong
-
-    // no rx_en?
-    .mii_connection_mii_rx_d                    (ENET_RX_DATA),
-    .mii_connection_mii_rx_dv                   (),
-    .mii_connection_mii_rx_err                  (),
-    .mii_connection_mii_tx_d                    (ENET_TX_DATA),
-    .mii_connection_mii_tx_en                   (ENET_TX_EN),
-    .mii_connection_mii_tx_err                  (),
-    .mii_connection_mii_crs                     (),
-    .mii_connection_mii_col                     (),
-
-    // what are the drivers for these clocks?
-    // .tx_clk_clk                                  (),
-    // .tx_rst_reset_n                              (),
-    // .rx_clk_clk                                  (),
-    // .rx_rst_reset_n                              ()
-);
+logic output_flag;
+logic [31:0] data_next;
+always_ff begin
+    if (output_flag) begin
+        LEDG[0] = 1;
+        display_data = data_next;
+    end
+end
 
 // ethernetsniffer TOP_LEVEL (
 //     .clk(),
@@ -242,40 +207,84 @@ amm_master_qsys_with_pcie u0 (
 //     .url_hits()
 // );
 
+ amm_master_qsys_with_pcie u0 (
+    .clk_clk                                    (CLOCK_50),
+    .reset_reset_n                              (KEY[0]),
+
+    .pcie_ip_refclk_export                      (PCIE_REFCLK_P),
+    .pcie_ip_pcie_rstn_export                   (PCIE_PERST_N),
+    .pcie_ip_rx_in_rx_datain_0                  (PCIE_RX_P),
+    .pcie_ip_tx_out_tx_dataout_0                (PCIE_TX_P),
+
+    .mac_misc_ff_tx_crc_fwd                     (0), // If this signal is set to 1, the user application is expected to provide the CRC.
+    // these signals are potentially unused? these are FIFO status signals
+    .mac_misc_ff_tx_septy                       (),
+    .mac_misc_tx_ff_uflow                       (),
+    .mac_misc_ff_tx_a_full                      (),
+    .mac_misc_ff_tx_a_empty                     (),
+    .mac_misc_rx_err_stat                       (),
+    .mac_misc_rx_frm_type                       (),
+    .mac_misc_ff_rx_dsav                        (),
+    .mac_misc_ff_rx_a_full                      (),
+    .mac_misc_ff_rx_a_empty                     (),
+    .mac_rx_clk_clk                             (),
+    .mac_tx_clk_clk                             (),
+
+    .mii_connection_mii_rx_d                    (ENET_RX_DATA),
+    .mii_connection_mii_rx_dv                   (),
+    .mii_connection_mii_rx_err                  (),
+    .mii_connection_mii_tx_d                    (ENET_TX_DATA),
+    .mii_connection_mii_tx_en                   (ENET_TX_EN),
+    .mii_connection_mii_tx_err                  (),
+    .mii_connection_mii_crs                     (),
+    .mii_connection_mii_col                     (),
+
+    .mii_status_set_10                          (0),
+    .mii_status_set_1000                        (0),
+    .mii_status_eth_mode                        (), // clock divider?
+    .mii_status_ena_10                          (0), // clock divider? note: this could be wrong
+
+    // what are the drivers for these clocks?
+    // .tx_clk_clk                                  (),
+    // .tx_rst_reset_n                              (),
+    // .rx_clk_clk                                  (),
+    // .rx_rst_reset_n                              ()
+    .debug_output_readdata                      (data_next),                      //               debug_output.readdata
+    .debug_output_writeresponsevalid_n          (output_flag)           //                           .writeresponsevalid_n
+);
  
  
- 
-//IB// SEG_HEX hex0(
-//IB// 	   .iDIG(display_data[31:28]),         
-//IB// 	   .oHEX_D(HEX7)
-//IB//            );  
-//IB// SEG_HEX hex1(                              
-//IB//            .iDIG(display_data[27:24]),
-//IB//            .oHEX_D(HEX6)
-//IB//            );
-//IB// SEG_HEX hex2(                           
-//IB//            .iDIG(display_data[23:20]),
-//IB//            .oHEX_D(HEX5)
-//IB//            );
-//IB// SEG_HEX hex3(                              
-//IB//            .iDIG(display_data[19:16]),
-//IB//            .oHEX_D(HEX4)
-//IB//            );
-//IB// SEG_HEX hex4(                               
-//IB//            .iDIG(display_data[15:12]),
-//IB//            .oHEX_D(HEX3)
-//IB//            );
-//IB// SEG_HEX hex5(                          
-//IB//            .iDIG(display_data[11:8]), 
-//IB//            .oHEX_D(HEX2)
-//IB//            );
-//IB// SEG_HEX hex6(                      
-//IB//            .iDIG(display_data[7:4]),
-//IB//            .oHEX_D(HEX1)
-//IB//            );
-//IB// SEG_HEX hex7(              
-//IB//            .iDIG(display_data[3:0]) ,
-//IB//            .oHEX_D(HEX0)
-//IB//            );
+SEG_HEX hex0(
+	   .iDIG(display_data[31:28]),         
+	   .oHEX_D(HEX7)
+           );  
+SEG_HEX hex1(                              
+           .iDIG(display_data[27:24]),
+           .oHEX_D(HEX6)
+           );
+SEG_HEX hex2(                           
+           .iDIG(display_data[23:20]),
+           .oHEX_D(HEX5)
+           );
+SEG_HEX hex3(                              
+           .iDIG(display_data[19:16]),
+           .oHEX_D(HEX4)
+           );
+SEG_HEX hex4(                               
+           .iDIG(display_data[15:12]),
+           .oHEX_D(HEX3)
+           );
+SEG_HEX hex5(                          
+           .iDIG(display_data[11:8]), 
+           .oHEX_D(HEX2)
+           );
+SEG_HEX hex6(                      
+           .iDIG(display_data[7:4]),
+           .oHEX_D(HEX1)
+           );
+SEG_HEX hex7(              
+           .iDIG(display_data[3:0]) ,
+           .oHEX_D(HEX0)
+           );
 
 endmodule 

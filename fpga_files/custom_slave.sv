@@ -48,7 +48,11 @@ module custom_slave #(
   input logic [1:0] channel_mac,
   output logic ready_mac,
   input logic sop_mac,
-  input logic [5:0] error_mac  
+  input logic [5:0] error_mac,
+
+  // output signals
+  output logic [31:0] debug_data,
+  output logic debug_sop
 );
 
 
