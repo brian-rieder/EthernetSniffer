@@ -14,7 +14,7 @@ reg n_rst;
 reg [31:0] data_in;
 reg eop;
 reg empty;
-reg error;
+reg [5:0] error;
 reg valid;
 reg ready;
 reg sop;
