@@ -21,13 +21,12 @@ module controller
   input wire ready, 	//ready signal from the MAC
   input wire sop,   //sop from MAC
   input wire eop, 	//eop from MAC
-  input wire error, 	//error from MAC
+  input wire [5:0] error, 	//error from MAC
   input wire valid,	//Used with ready to signify good packet
   input wire rdempty, 	//empty signal from Input FIFO
   output reg rdreq, 	//read request signal to Input FIFO
   //output reg wrreq, 	//write request signal to Input FIFO
   output reg inc_addr, 	//signal to address buffer to increment address
-  output reg addr, 	//signal to avalon slave controller
   output reg clear, 	//signal to comparators to clear the match flag
   output reg [63:0] port_hits, ip_hits, mac_hits, url_hits
   //double check the state that the clear flag should be raised in
@@ -39,7 +38,7 @@ typedef enum logic [3:0] {
 } state_type;
 
 state_type state, next_state;
-reg next_rdreq, /*next_wrreq,*/ next_inc_addr, next_addr, next_clear, weighted_match, next_weighted_match;
+reg next_rdreq, /*next_wrreq,*/ next_inc_addr, next_clear, weighted_match, next_weighted_match;
 reg [63:0] next_port_hits, next_ip_hits, next_mac_hits, next_url_hits;
 // reg [2:0] counter, next_counter;
 reg [3:0] wmatch;
@@ -92,7 +91,7 @@ always_comb begin
       if(eop) begin
         next_state = WAIT1;
       end
-      else if(error) begin
+      else if(error != '0) begin
         next_state = ERROR;
       end
     end
@@ -140,7 +139,6 @@ always_comb begin
   next_rdreq = rdreq;
   //next_wrreq = wrreq;
   next_inc_addr = inc_addr;
-  next_addr = addr;
   next_clear = clear;
   next_port_hits = port_hits;
   next_ip_hits = ip_hits;
@@ -157,7 +155,6 @@ always_comb begin
       next_rdreq = 0;
       //next_wrreq = 0;
       next_inc_addr = 0;
-      next_addr = 1;
       next_clear = 0;
     end
     
@@ -165,7 +162,6 @@ always_comb begin
       next_rdreq = 0;
       //next_wrreq = 0;
       next_inc_addr = 0;
-      next_addr = 0;
       next_clear = 1;
     end
     
@@ -173,7 +169,6 @@ always_comb begin
     //   next_rdreq = 1;
     //   //next_wrreq = 0;
     //   next_inc_addr = 0;
-    //   next_addr = 0;
     //   next_clear = 0;
     // end
     
@@ -181,7 +176,6 @@ always_comb begin
       next_rdreq = 0;
       //next_wrreq = 1;
       next_inc_addr = 0;
-      next_addr = 0;
       next_clear = 0;
     end
     
@@ -189,7 +183,6 @@ always_comb begin
       next_rdreq = 0;
       //next_wrreq = 0;
       next_inc_addr = 0;
-      next_addr = 0;
       next_clear = 1;
       
       // if(counter > '0) begin
@@ -215,7 +208,6 @@ always_comb begin
       next_rdreq = 0;
       //next_wrreq = 0;
       next_inc_addr = 1;
-      next_addr = 0;
       next_clear = 0;
     end
     
@@ -223,7 +215,6 @@ always_comb begin
       next_rdreq = 0;
       //next_wrreq = 0;
       next_inc_addr = 0;
-      next_addr = 0;
       next_clear = 0;
     end
   endcase
@@ -250,7 +241,6 @@ always_ff @ (posedge clk, negedge n_rst) begin
     rdreq <= 0;
     //wrreq <= 0;
     inc_addr <= 0;
-    addr <= 0;
     clear <= 0;
     port_hits <= '0;
     ip_hits <= '0;
@@ -265,7 +255,6 @@ always_ff @ (posedge clk, negedge n_rst) begin
     rdreq <= next_rdreq;
     //wrreq <= next_wrreq;
     inc_addr <= next_inc_addr;
-    addr <= next_addr;
     clear <= next_clear;
     port_hits <= next_port_hits;
     ip_hits <= next_ip_hits;
