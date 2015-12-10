@@ -61,7 +61,7 @@ begin
 	sample_data_4 = "om  ";
 	sample_data_5 = "    ";
 	data_in = 32'h0000;
-	flagged_string = 32'h0000;
+	flagged_string = "www.google.com";
 	clear = '0;
 
 	//Reset Test Case
@@ -79,7 +79,6 @@ begin
 	@cb; clear = 1'b1; @cb; clear = 1'b0;
 
 	//*******************Test Case 1: Regular URL, shifted *********************//
-	flagged_string = "www.google.com"; 	
 	
 	compare(sample_data, sample_data_2, sample_data_3, sample_data_4, sample_data_5, 1'b1);
 	

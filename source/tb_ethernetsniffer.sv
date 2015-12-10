@@ -100,7 +100,7 @@ begin
 	update_done = 1'b0;
 	ready = 1'b0;
 	sop = 1'b0;
-	flagged_string = "purdue.edu"; 
+	flagged_string = "www.purdue.edu"; 
 	flagged_ip = 32'h80D207C8; //128.210.7.200
 	flagged_port = 16'h0050; //Port 80
 	flagged_mac = 48'h641225eb1080; 	
