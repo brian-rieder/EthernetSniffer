@@ -159,6 +159,7 @@ begin
 	assert(expected_addr_out == cb.ao)
 	else $error("1:9 ERROR: Addr Out is incorrect.");
 
+	$stop;
 	//TO BE ADDED: TEST CASE SET 2. Change inc_addr value to verify functionality.
 end
 endmodule

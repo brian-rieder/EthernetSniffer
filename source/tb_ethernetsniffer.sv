@@ -13,27 +13,22 @@ reg clk;
 reg n_rst;
 reg [31:0] data_in;
 reg eop;
-reg empty;
+reg [1:0] empty;
 reg [5:0] error;
 reg valid;
 reg ready;
 reg sop;
-reg rdempty; //from Input FIFO??
 reg [15:0] flagged_port;
 reg [31:0] flagged_ip;
 reg [47:0] flagged_mac;
 reg [0:16][7:0] flagged_string;
 reg [31:0] addr_out;
 reg write_enable;
-reg addr_as;
-reg rdreq;
 reg [31:0] data_out;
 
 reg [31:0] expected_data_out;
 reg [31:0] expected_addr_out;
 reg expected_wr_en;
-reg expected_addr_as;
-reg expected_rdreq;
 
 reg [6247:0] live_data; //6224
 reg [31:0] sample_data;
@@ -46,7 +41,7 @@ reg update_done;
 int unsigned strlen;
 int unsigned i, j;
 
-ethernetsniffer sniff(.clk, .n_rst, .data_in, .eop, .empty, .error, .valid, .update_done, .ready, .sop, .rdempty, .flagged_port, .flagged_ip, .flagged_mac,.flagged_string, .data_out, .rdreq, .addr_as, .write_enable, .addr_out, .port_hits, .ip_hits, .mac_hits, .url_hits);
+ethernetsniffer sniff(.clk, .n_rst, .data_in, .eop, .empty, .error, .valid, .update_done, .ready, .sop, .flagged_port, .flagged_ip, .flagged_mac,.flagged_string, .data_out, .write_enable, .addr_out, .port_hits, .ip_hits, .mac_hits, .url_hits);
 
 localparam CLK_PERIOD = 10;
 
@@ -70,15 +65,12 @@ clocking cb @(posedge clk);
 	output ud = update_done;
 	output rdy = ready;
 	output cbsop = sop;
-	output rdemp = rdempty;
 	output flagport = flagged_port;
 	output flagmac = flagged_mac;
 	output flagip = flagged_ip;
 	output flagstr = flagged_string;
 	input aout = addr_out;
 	input wren = write_enable;
-	input addras = addr_as;
-	input rreq = rdreq;
 	input datao = data_out;
 	input phits = port_hits;
 	input mhits = mac_hits;
@@ -102,13 +94,12 @@ begin
 	flagged_port = 16'h00;
 	flagged_mac = 48'h000000;
 	eop = 1'b0;
-	empty = 1'b0;
-	error = 1'b0;
+	empty = 2'b0;
+	error = 6'b0;
 	valid = 1'b0;
 	update_done = 1'b0;
 	ready = 1'b0;
 	sop = 1'b0;
-	rdempty = 1'b0;
 	flagged_string = "purdue.edu"; 
 	flagged_ip = 32'h80D207C8; //128.210.7.200
 	flagged_port = 16'h0050; //Port 80
@@ -121,18 +112,12 @@ begin
 	expected_data_out = 32'h000;
 	expected_addr_out = 1'b0;
 	expected_wr_en = 1'b0;
-	expected_addr_as = 1'b0;
-	expected_rdreq = 1'b0;
 	assert(expected_data_out == cb.datao)
 	else $error("1: Reset Test Case: Incorrect Data_Out");
 	assert(expected_addr_out == cb.aout)
 	else $error("1: Reset Test Case: Incorrect addr_out");
 	assert(expected_wr_en == cb.wren)
 	else $error("1: Reset Test Case: Incorrect write enable");
-	assert(expected_addr_as == cb.addras)
-	else $error("1: Reset Test Case: Incorrect addr_as");
-	assert(expected_rdreq == cb.rreq)
-	else $error("1: Reset Test Case: Incorrect rdreq");
 	@cb; @cb;
 
 	//*******************Test Case 1:*********************//
@@ -155,7 +140,7 @@ begin
 	@cb; 
 	sop = 1'b0; @cb;
 	//eop = 1'b0;
-	@cb; @cb; rdempty = 1'b1; @cb; rdempty = 1'b0; @cb;
+	@cb; @cb; empty = 2'b01; @cb; empty = 2'b00; @cb;
 
 	for (i = 6248-32; i > 128; i = i - 32) begin
 		sample_data   = live_data [i     +: 32];
@@ -167,10 +152,10 @@ begin
 	end
 
 	eop = 1'b1;
-	empty = 1'b1;
+	empty = 2'b01;
 	@cb; 
 	eop = 1'b0;
-	empty = 1'b0;
+	empty = 2'b01;
 	@cb; @cb; @cb; @cb; @cb; @cb; @cb; @cb; @cb;
 
 	$stop;

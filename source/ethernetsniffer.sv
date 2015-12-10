@@ -11,12 +11,11 @@ input wire clk,
 input wire n_rst,
 input wire [31:0] data_in,
 input wire eop,
-input wire empty,
+input wire [1:0] empty,
 input wire [5:0] error,
 input wire valid,
 input wire ready,
 input wire sop,
-input wire rdempty, //from Input FIFO??
 input reg [15:0] flagged_port,
 input reg [31:0] flagged_ip,
 input reg [47:0] flagged_mac,
@@ -24,7 +23,6 @@ input reg [0:16][7:0] flagged_string,
 input reg update_done, //from A/S
 output wire [31:0] addr_out,
 output wire write_enable,
-output wire rdreq,
 output wire [31:0] data_out,
 output reg [63:0] port_hits, ip_hits, mac_hits, url_hits);
 
@@ -47,6 +45,6 @@ port_comparator PC (.clk, .n_rst, .clear(clear), .flagged_port, .data_in, .match
 
 result_address_fsm RAFSM (.clk, .n_rst, .inc_addr, .addr_out, .write_enable);
 
-controller CTRLR (.clk, .n_rst, .url_match(url_match), .port_match(port_match), .mac_match(mac_match), .ip_match(ip_match), .update_done, .ready, .valid, .eop, .error, .rdempty, .rdreq, .inc_addr, .port_hits, .ip_hits, .mac_hits, .url_hits, .clear(clear), .sop);
+controller CTRLR (.clk, .n_rst, .url_match(url_match), .port_match(port_match), .mac_match(mac_match), .ip_match(ip_match), .update_done, .ready, .valid, .eop, .error, .empty, .inc_addr, .port_hits, .ip_hits, .mac_hits, .url_hits, .clear(clear), .sop);
 
 endmodule
