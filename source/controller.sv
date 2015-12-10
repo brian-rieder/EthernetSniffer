@@ -21,7 +21,7 @@ module controller
   input wire ready, 	//ready signal from the MAC
   input wire sop,   //sop from MAC
   input wire eop, 	//eop from MAC
-  input wire error, 	//error from MAC
+  input wire [5:0] error, 	//error from MAC
   input wire valid,	//Used with ready to signify good packet
   input wire rdempty, 	//empty signal from Input FIFO
   output reg rdreq, 	//read request signal to Input FIFO
@@ -91,7 +91,7 @@ always_comb begin
       if(eop) begin
         next_state = WAIT1;
       end
-      else if(error) begin
+      else if(error != '0) begin
         next_state = ERROR;
       end
     end
