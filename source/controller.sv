@@ -22,7 +22,7 @@ module controller
   input wire [5:0] error, 	//error from MAC
   input wire valid,	//Used with ready to signify good packet
   input wire [1:0] empty, 	//empty signal from Input FIFO
-  output wire ready, 	//ready signal to the Input FIFO
+  output reg ready, 	//ready signal to the Input FIFO
   output reg inc_addr, 	//signal to address buffer to increment address
   output reg clear, 	//signal to comparators to clear the match flag
   output reg [63:0] port_hits, ip_hits, mac_hits, url_hits //registers to hold the hit counts
@@ -34,7 +34,7 @@ typedef enum logic [3:0] {
 } state_type;
 
 state_type state, next_state;
-reg next_inc_addr, next_clear, weighted_match, next_weighted_match, ready, next_ready;
+reg next_inc_addr, next_clear, weighted_match, next_weighted_match, next_ready;
 reg [63:0] next_port_hits, next_ip_hits, next_mac_hits, next_url_hits;
 // reg [2:0] counter, next_counter;
 reg [3:0] wmatch;
