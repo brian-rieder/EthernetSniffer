@@ -9,8 +9,8 @@
 
 module tb_ethernetsniffer();
 
-reg clk;
-reg n_rst;
+reg clk = 0;
+reg n_rst = 0;
 reg [31:0] data_in;
 reg eop;
 reg [1:0] empty;
@@ -41,7 +41,7 @@ reg update_done;
 int unsigned strlen;
 int unsigned i, j;
 
-ethernetsniffer sniff(.clk, .n_rst, .data_in, .eop, .empty, .error, .valid, .update_done, .ready, .sop, .flagged_port, .flagged_ip, .flagged_mac,.flagged_string, .data_out, .write_enable, .addr_out, .port_hits, .ip_hits, .mac_hits, .url_hits);
+ethernetsniffer sniff(.clk, .n_rst, .data_in, .eop, .empty, .error, .valid, .update_done, .ready, .sop, .flagged_port, .flagged_ip, .flagged_mac,.flagged_string, .data_out, .write_enable, .strlen, .addr_out, .port_hits, .ip_hits, .mac_hits, .url_hits);
 
 localparam CLK_PERIOD = 10;
 
@@ -81,7 +81,7 @@ endclocking
 initial
 begin
 	//Initializations
-	n_rst = 1'b1;
+	//n_rst = 1'b1;
 	sample_data = 32'h0000;
         sample_data_2 = 32'h0000;
 	sample_data_3 = 32'h0000;

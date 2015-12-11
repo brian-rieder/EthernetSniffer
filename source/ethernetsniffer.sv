@@ -16,25 +16,26 @@ input wire [5:0] error,
 input wire valid,
 input wire ready,
 input wire sop,
-input reg [15:0] flagged_port,
-input reg [31:0] flagged_ip,
-input reg [47:0] flagged_mac,
-input reg [0:16][7:0] flagged_string,
-input reg update_done, //from A/S
+input wire [15:0] flagged_port,
+input wire [31:0] flagged_ip,
+input wire [47:0] flagged_mac,
+input wire [0:16][7:0] flagged_string,
+input wire update_done, //from A/S
+input wire [4:0] strlen,
 output wire [31:0] addr_out,
 output wire write_enable,
 output wire [31:0] data_out,
 output reg [63:0] port_hits, ip_hits, mac_hits, url_hits);
 
 wire clear;
-wire [4:0] strlen;
+//wire [4:0] strlen;
 wire url_match;
 wire mac_match;
 wire ip_match;
 wire port_match;
 wire inc_addr;
 
-//Should data out have something? Even a dummy value? I took them out because it was affecting the test bench.
+
 string_comparator SC(.clk, .n_rst, .clear(clear), .flagged_string, .strlen, .data_in, .match(url_match), .data_out());
 
 mac_comparator MC (.clk, .n_rst, .clear(clear), .flagged_mac, .data_in, .match(mac_match), .data_out);
