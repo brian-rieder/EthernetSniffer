@@ -149,7 +149,7 @@ always_comb begin
     
     IDLE: begin
       next_inc_addr = 0;
-      next_clear = 0; //1
+      next_clear = 1;
       if(empty < 3) begin
         next_ready = 1;
       end
