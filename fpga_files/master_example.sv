@@ -68,7 +68,7 @@ pll pll_inst(
 	.c2( soc_clk) );
 */
 	
-assign FAN_CTRL = 1'b0;
+assign FAN_CTRL = 1'b1;
 assign PCIE_WAKE_N = 1'b1;
 
 assign soc_clk = CLOCK_50;
@@ -207,6 +207,10 @@ end
 //     .url_hits()
 // );
 
+wire mdio_oen;
+wire mdio_out;
+assign ENET_MDIO = mdio_oen ? 1'bz : mdio_out;
+
  amm_master_qsys_with_pcie u0 (
     .clk_clk                                    (CLOCK_50),
     .reset_reset_n                              (KEY[0]),
@@ -227,22 +231,28 @@ end
     .mac_misc_ff_rx_dsav                        (),
     .mac_misc_ff_rx_a_full                      (),
     .mac_misc_ff_rx_a_empty                     (),
-    .mac_rx_clk_clk                             (),
-    .mac_tx_clk_clk                             (),
+    .mac_rx_clk_clk                             (ENET_RX_CLK),
+    .mac_tx_clk_clk                             (ENET_TX_CLK),
 
     .mii_connection_mii_rx_d                    (ENET_RX_DATA),
-    .mii_connection_mii_rx_dv                   (),
-    .mii_connection_mii_rx_err                  (),
+    .mii_connection_mii_rx_dv                   (ENET_RX_DV),
+    .mii_connection_mii_rx_err                  (ENET_RX_ER),
     .mii_connection_mii_tx_d                    (ENET_TX_DATA),
     .mii_connection_mii_tx_en                   (ENET_TX_EN),
-    .mii_connection_mii_tx_err                  (),
-    .mii_connection_mii_crs                     (),
-    .mii_connection_mii_col                     (),
+    .mii_connection_mii_tx_err                  (ENET_TX_ER),
+    .mii_connection_mii_crs                     (ENET_RX_CRS),
+    .mii_connection_mii_col                     (ENET_RX_COL),
 
     .mii_status_set_10                          (0),
     .mii_status_set_1000                        (0),
-    .mii_status_eth_mode                        (), // clock divider?
+    .mii_status_eth_mode                        (0), // clock divider?
     .mii_status_ena_10                          (0), // clock divider? note: this could be wrong
+
+    .mdio_conn_mdc                              (ENET_MDC),
+    .mdio_conn_mdio_in                          (ENET_MDIO),
+    .mdio_conn_mdio_out                         (mdio_oen),
+    .mdio_conn_mdio_oen                         (mdio_out),
+
 
     // what are the drivers for these clocks?
     // .tx_clk_clk                                  (),
