@@ -149,7 +149,7 @@ always_comb begin
     
     IDLE: begin
       next_inc_addr = 0;
-      next_clear = 1;
+      next_clear = 0; //1
       if(empty < 3) begin
         next_ready = 1;
       end
@@ -241,8 +241,8 @@ always_ff @ (posedge clk, negedge n_rst) begin
   if (!n_rst) begin
     state <= RESET;
     ready <= 0;
-    inc_addr <= 0;
-    clear <= 0;
+    inc_addr <= '0;
+    clear <= '0;
     port_hits <= '0;
     ip_hits <= '0;
     mac_hits <= '0;

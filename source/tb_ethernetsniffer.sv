@@ -82,17 +82,16 @@ initial
 begin
 	//Initializations
 	n_rst = 1'b1;
-	strlen = 14;
 	sample_data = 32'h0000;
         sample_data_2 = 32'h0000;
 	sample_data_3 = 32'h0000;
 	sample_data_4 = 32'h0000;
 	sample_data_5 = 32'h0000;
 	data_in = 32'h0000;
-	flagged_string = 32'h0000;
-	flagged_ip = 32'h0000;
-	flagged_port = 16'h00;
-	flagged_mac = 48'h000000;
+	flagged_string = "www.purdue.edu"; 
+	flagged_ip = 32'h80D207C8; //128.210.7.200
+	flagged_port = 16'h0050; //Port 80
+	flagged_mac = 48'h641225eb1080; 
 	eop = 1'b0;
 	empty = 2'b0;
 	error = 6'b0;
@@ -100,18 +99,15 @@ begin
 	update_done = 1'b0;
 	ready = 1'b0;
 	sop = 1'b0;
-	flagged_string = "www.purdue.edu"; 
-	flagged_ip = 32'h80D207C8; //128.210.7.200
-	flagged_port = 16'h0050; //Port 80
-	flagged_mac = 48'h641225eb1080; 	
-	strlen = 10;
+	strlen = 14;
 
-	//Reset Test Case
-	cb.n_rst <= 1'b1;
-	@cb; n_rst = 1'b0; @cb;
 	expected_data_out = 32'h000;
 	expected_addr_out = 1'b0;
 	expected_wr_en = 1'b0;
+
+	//Reset Test Case
+	cb.n_rst <= 1'b1;
+	@cb; cb.n_rst <= 1'b0; @cb; cb.n_rst <= 1'b1;
 	assert(expected_data_out == cb.datao)
 	else $error("1: Reset Test Case: Incorrect Data_Out");
 	assert(expected_addr_out == cb.aout)
