@@ -12,8 +12,8 @@ module port_comparator
   input wire clk,
   input wire n_rst,
   input wire clear,
-  input reg [15:0] flagged_port,
-  input reg [31:0] data_in,
+  input wire [15:0] flagged_port,
+  input wire [31:0] data_in,
   output reg match,
   output reg [31:0] data_out
 );
