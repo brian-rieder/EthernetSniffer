@@ -1,12 +1,12 @@
-// File name:   string_comparator.sv
+// File name:   streaming.sv
 // Updated:     30 November 2015
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
-// Description: Comparator designed for string matching based on predefined corrupt 
-//              strings programmed from the Atom.
+// Description: This module is the same as the string comparator. It is used for testing with the tb_streaming module.
+// The tb_streaming module was used to test reading in data from a live packet. 
 
-module string_comparator2
+module streaming
 (
   // port declaration
   input wire clk,
