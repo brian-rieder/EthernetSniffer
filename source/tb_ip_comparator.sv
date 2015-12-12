@@ -3,7 +3,8 @@
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
-// Description: Test Bench for the IP comparator.
+// Description: Test Bench for the IP comparator. Iteratively sends inputs and checks for
+// appropriate recognition of an IP address.
 
 `timescale 1ns/10ps
 

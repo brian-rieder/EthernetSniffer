@@ -8,7 +8,6 @@
 
 module string_comparator
 (
-  // port declaration
   input wire clk,
   input wire n_rst,
   input wire clear,
@@ -29,7 +28,10 @@ reg [16:0] char_matches_3;
 
 always_comb begin
   next_match = match;
-  char_matches_0 = '0; char_matches_1 = '0; char_matches_2 = '0; char_matches_3 = '0;
+  char_matches_0 = '0; char_matches_1 = '0; char_matches_2 = '0; char_matches_3 = '0; //Reset char_matches buffers
+
+// A buffer of all 1s will signify a match. Therefore, any character beyond the length of the target string
+// should automatically be a 1. The others are dependent on whether they match the flagged_string or not.
   for(j = 0; j < 17; j = j + 1) begin
     char_matches_0[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[19 - j] == flagged_string[j]))?1'b1:1'b0;
     char_matches_1[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[18 - j] == flagged_string[j]))?1'b1:1'b0;
@@ -37,6 +39,7 @@ always_comb begin
     char_matches_3[j] = ((strlen != 17 && j < 17 - strlen) || (comp_buff[16 - j] == flagged_string[j]))?1'b1:1'b0;
   end
 
+// Next_match is set to 1 when a char_matches is found that is filled with 1s. Each char_matches handles a different byte offset.
   if (char_matches_0 == '1 || char_matches_1 == '1 || char_matches_2 == '1 || char_matches_3 == '1) begin
     next_match = 1'b1;
   end

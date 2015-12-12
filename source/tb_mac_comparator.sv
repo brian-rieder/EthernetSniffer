@@ -3,7 +3,8 @@
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
-// Description: Test Bench for the Mac comparator.
+// Description: Test Bench for the Mac comparator. Iteratively provides inputs and
+// checks for appropriate matching of Mac address in that input.
 
 `timescale 1ns/10ps
 
