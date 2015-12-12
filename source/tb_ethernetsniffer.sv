@@ -28,6 +28,7 @@ reg [31:0] data_out;
 
 reg [31:0] expected_data_out;
 reg [31:0] expected_addr_out;
+reg [63:0] expected_mac_hits, expected_ip_hits, expected_port_hits, expected_url_hits;
 reg expected_wr_en;
 
 reg [6247:0] live_data;
@@ -138,6 +139,17 @@ begin
 
 	eop = 1'b1; empty = 2'b01;
 	@cb; eop = 1'b0;
+
+	expected_mac_hits = 0; expected_ip_hits = 0; expected_url_hits = 0; expected_port_hits = 0;
+	assert(expected_mac_hits == cb.mhits)
+	else $error("2: Incorrect mac match count.");
+	assert(expected_ip_hits == cb.ihits)
+	else $error("2: Incorrect ip match count.");
+	assert(expected_url_hits == cb.uhits)
+	else $error("2: Incorrect url match count.");
+	assert(expected_port_hits == cb.phits)
+	else $error("2: Incorrect port match count.");
+
 	@cb; @cb; @cb; @cb; @cb; @cb; @cb; @cb; @cb;
 
 	//*******************Test Case 2: www.wired.com *********************//
@@ -160,7 +172,18 @@ begin
 	end
 
 	eop = 1'b1; empty = 2'b01;
-	@cb; eop = 1'b0; empty = 2'b01;
+	@cb; eop = 1'b0;
+
+	expected_mac_hits = 1; expected_ip_hits = 1; expected_url_hits = 0; expected_port_hits = 1;
+	assert(expected_mac_hits == cb.mhits)
+	else $error("3: Incorrect mac match count.");
+	assert(expected_ip_hits == cb.ihits)
+	else $error("3: Incorrect ip match count.");
+	assert(expected_url_hits == cb.uhits)
+	else $error("3: Incorrect url match count.");
+	assert(expected_port_hits == cb.phits)
+	else $error("3: Incorrect port match count.");
+
 	@cb; @cb; @cb; @cb; @cb; @cb; @cb; @cb; @cb;
 
 	//*******************Test Case 3: www.extremetech.com *********************//
@@ -184,7 +207,29 @@ live_data3 =
 
 	eop = 1'b1; empty = 2'b01;
 	@cb; eop = 1'b0;
+
+	expected_mac_hits = 2; expected_ip_hits = 1; expected_url_hits = 1; expected_port_hits = 2;
+	assert(expected_mac_hits == cb.mhits)
+	else $error("4: Incorrect mac match count.");
+	assert(expected_ip_hits == cb.ihits)
+	else $error("4: Incorrect ip match count.");
+	assert(expected_url_hits == cb.uhits)
+	else $error("4: Incorrect url match count.");
+	assert(expected_port_hits == cb.phits)
+	else $error("4: Incorrect port match count.");
+
 	@cb; @cb; @cb; @cb; @cb; @cb; @cb; @cb; @cb;
+
+	expected_mac_hits = 3; expected_ip_hits = 1; expected_url_hits = 1; expected_port_hits = 3;
+	assert(expected_mac_hits == cb.mhits)
+	else $error("4: Incorrect mac match count.");
+	assert(expected_ip_hits == cb.ihits)
+	else $error("4: Incorrect ip match count.");
+	assert(expected_url_hits == cb.uhits)
+	else $error("4: Incorrect url match count.");
+	assert(expected_port_hits == cb.phits)
+	else $error("4: Incorrect port match count.");
+
 
 $stop;
 
