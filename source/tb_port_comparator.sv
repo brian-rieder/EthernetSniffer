@@ -3,7 +3,8 @@
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
-// Description: Test Bench for the port comparator.
+// Description: Test Bench for the port comparator. Iteratively provides inputs and checks outputs
+// for appropriate recognition of ports.
 
 `timescale 1ns/10ps
 

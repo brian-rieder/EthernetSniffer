@@ -8,7 +8,6 @@
 
 module ip_comparator
 (
-  // port declaration
   input wire clk,
   input wire n_rst,
   input wire clear,

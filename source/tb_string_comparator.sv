@@ -3,7 +3,8 @@
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
-// Description: Test Bench for the String comparator.
+// Description: Test Bench for the String comparator. Iteratively applies inputs and
+// checks outputs for appropriate recognition of flagged string.
 
 `timescale 1ns/10ps
 
@@ -42,13 +43,13 @@ end
 
 clocking cb @(posedge clk);
 	default input #1step output #100ps;
-	output #800ps n_rst = n_rst;
-	output datai = data_in;
+	output #800ps n_rst  = n_rst;
+	output datai         = data_in;
 	output flaggedstring = flagged_string;
-	output stringlen = strlen;
-	output c = clear;
-	input datao = data_out;
-	input m = match;
+	output stringlen     = strlen;
+	output c             = clear;
+	input datao          = data_out;
+	input m              = match;
 endclocking
 
 initial
@@ -60,7 +61,7 @@ begin
 	sample_data_3 = "le.c";
 	sample_data_4 = "om  ";
 	sample_data_5 = "    ";
-	data_in = 32'h0000;
+	data_in = '0;
 	flagged_string = "www.google.com";
 	clear = '0;
 
@@ -196,50 +197,43 @@ task compare;
 	input [31:0] sample_data_3;
 	input [31:0] sample_data_4;
 	input [31:0] sample_data_5;
-	input reg expected_matchFlag;
+	input reg expected_matchFlag; // Variable to indicate whether or not to expect a match
 	begin
 	data_in = sample_data; 
-	expected_data_out = 32'h0000;
+	expected_data_out = '0;
 	expected_match = '0;
-	@cb;
-
-	data_in = sample_data_2; @cb;
-
-	data_in = sample_data_3; @cb;
-
-	data_in = sample_data_4; @cb;
 	
-	data_in = sample_data_5; @cb;
-
-	data_in = 32'h0000; @cb;
+	// DATA IN
+	@cb; data_in = sample_data_2;
+	@cb; data_in = sample_data_3;
+	@cb; data_in = sample_data_4;
+	@cb; data_in = sample_data_5;
+	@cb; data_in = '0;
+	@cb; @cb;
 
 	// DATA OUT
-	@cb;
 	expected_data_out = sample_data;
 	assert(expected_data_out == cb.datao)
 	else $error("2.2: Successful Match: Incorrect Data_Out");
-	@cb;
-	expected_data_out = sample_data_2;
+	@cb; expected_data_out = sample_data_2;
 	assert(expected_data_out == cb.datao)
 	else $error("2.3: Successful Match: Incorrect Data_Out");
-	@cb;
-	expected_data_out = sample_data_3;
+	@cb; expected_data_out = sample_data_3;
 	assert(expected_data_out == cb.datao)
 	else $error("2.4: Successful Match: Incorrect Data_Out");
-	@cb;
-	expected_data_out = sample_data_4;
+	@cb; expected_data_out = sample_data_4;
 	assert(expected_data_out == cb.datao)
 	else $error("2.5: Successful Match: Incorrect Data_Out");
-	@cb;
-	expected_data_out = sample_data_5;
+	@cb; expected_data_out = sample_data_5;
 	assert(expected_data_out == cb.datao)
 	else $error("2.6: Successful Match: Incorrect Data_Out");
 	expected_match = expected_matchFlag;
 	assert(expected_match == cb.m)
 	else $error("2.1: Successful Match: Incorrect Match Flag");
 	
-	@cb; expected_match = 1'b0; @cb; @cb; @cb;
-	clear = 1'b1; @cb; clear = 1'b0;
+	@cb; expected_match = 1'b0;
+	@cb; @cb; @cb; clear = 1'b1;
+	@cb; clear = 1'b0;
 	end	
 endtask
 

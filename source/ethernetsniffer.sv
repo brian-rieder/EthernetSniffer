@@ -1,10 +1,9 @@
-// $Id:
 // File name:   ethernetsniffer.sv
 // Created:     10/5/2015
 // Author:      Caitlin Cowden
 // Lab Section: 337-07
 // Version:     1.0  Initial Design Entry
-// Description: wrapper file
+// Description: This is the wrapper file for the entire design. 
 
 module ethernetsniffer(
 input wire clk,

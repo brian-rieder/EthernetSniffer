@@ -3,28 +3,27 @@
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
-// Description: Controller state machine -- determines the outputs and 
+// Description: Controller state machine -- The controller determines the outputs and 
 //              functionality of the system by outputting signals to indicate
 //              readiness of subsystems.
 
 module controller
 (
-  // port declaration
   input wire clk,
   input wire n_rst,
-  input wire port_match, //match flag from port comparator
-  input wire ip_match,   //match flag from ip comparator
-  input wire mac_match,  //match flag from mac comparator
-  input wire url_match,  //match flag from string comparator
+  input wire port_match, 	//match flag from port comparator
+  input wire ip_match,   	//match flag from ip comparator
+  input wire mac_match,  	//match flag from mac comparator
+  input wire url_match,  	//match flag from string comparator
   input wire update_done,	//??from Avalon Slave
-  input wire sop,   //sop from MAC
-  input wire eop, 	//eop from MAC
+  input wire sop,   		//sop from MAC
+  input wire eop, 		//eop from MAC
   input wire [5:0] error, 	//error from MAC
-  input wire valid,	//Used with ready to signify good packet
+  input wire valid,		//Used with ready to signify good packet
   input wire [1:0] empty, 	//empty signal from Input FIFO
-  output reg ready, 	//ready signal to the Input FIFO
-  output reg inc_addr, 	//signal to address buffer to increment address
-  output reg clear, 	//signal to comparators to clear the match flag
+  output reg ready, 		//ready signal to the Input FIFO
+  output reg inc_addr, 		//signal to address buffer to increment address
+  output reg clear, 		//signal to comparators to clear the match flag
   output reg [63:0] port_hits, ip_hits, mac_hits, url_hits //registers to hold the hit counts
 );
 
@@ -74,12 +73,6 @@ always_comb begin
     // end
     
     COMPARE: begin
-      // BPR: we won't receive rdempty if the FIFO is being written to, it will never
-      // be completely empty. This signal was being treated as "devoid of previous packet"
-      // CEC: what he said
-      // if(rdempty) begin
-        // next_state = WAIT1;
-      // end
       if(eop) begin
         next_state = WAIT1;
       end
