@@ -230,7 +230,7 @@ end
 always_comb begin
   next_weighted_match = 0;
   
-  wmatch = port_match*2 + ip_match*2 + mac_match*1 + url_match*4;
+  wmatch = port_match*1 + ip_match*2 + mac_match*2 + url_match*4;
   if(wmatch >= 4)begin
     next_weighted_match = 1;
   end
