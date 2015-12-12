@@ -43,7 +43,7 @@ ip_comparator IC (.clk, .n_rst, .clear(clear), .flagged_ip, .data_in, .match(ip_
 
 port_comparator PC (.clk, .n_rst, .clear(clear), .flagged_port, .data_in, .match(port_match), .data_out());
 
-result_address_fsm RAFSM (.clk, .n_rst, .inc_addr, .addr_out, .write_enable);
+result_address_fsm RAFSM (.clk, .n_rst, .inc_addr, .addr_out(addr_out), .write_enable);
 
 controller CTRLR (.clk, .n_rst, .url_match(url_match), .port_match(port_match), .mac_match(mac_match), .ip_match(ip_match), .update_done, .ready(ready), .valid, .eop, .error, .empty, .inc_addr, .port_hits, .ip_hits, .mac_hits, .url_hits, .clear(clear), .sop);
 
