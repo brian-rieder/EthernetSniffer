@@ -103,6 +103,8 @@ void test32( PCIE_HANDLE hPCIe, DWORD addr )
 	  PCIE_Read32( hPCIe, pcie_bars[0], addr+16, &readVal);
 	  printf("Chosen packet: %u\t%u\n",testVal,readVal);
 
+	  while(1) {}
+
 	 //  while(1) {
 		// PCIE_Read32( hPCIe, pcie_bars[0], addr+20, &readVal);
 		// printf("Addr 20: %u\n",readVal);

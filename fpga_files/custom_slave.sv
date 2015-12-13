@@ -21,6 +21,7 @@ module custom_slave #(
 	// input logic n_action,					// Trigger the Read or Write. Additional control to avoid continuous transactions. Not a required signal. Can and should be removed for actual application.
 	// input logic add_data_sel,				// Interfaced to switch. Selects either Data or Address to be displayed on the Seven Segment Displays.
 	// input logic [MASTER_ADDRESSWIDTH-1:0] rdwr_address,	// read_address if required to be sent from another block. Can be unused if consecutive reads are required.
+  output logic [DATAWIDTH-1:0] display_data,
 
 	// Bus Slave Interface
   input logic [SLAVE_ADDRESSWIDTH-1:0] slave_address,
@@ -120,13 +121,18 @@ always_comb begin
   end
 end
 
-always_ff @ (posedge clk, negedge n_rst) begin
+always_ff @ (posedge clk) begin
   if(state == PACKET_TRANSMISSION) begin
     count <= nextcount;
     data_stream <= live_data[count*32+31 -: 31]; // -: 32?
   end
+  else begin
+    count <= '0;
+    data_stream <= 32'h12345678;
+  end
 end
 
+assign display_data = data_stream;
 ethernetsniffer ESNIFF (
   // inputs
   .clk(clk),
