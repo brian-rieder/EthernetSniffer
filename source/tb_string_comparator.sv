@@ -54,7 +54,7 @@ endclocking
 
 initial
 begin
-	n_rst = 1'b1;
+	n_rst = 1'b0;
 	strlen = 14;
 	sample_data = "www.";
         sample_data_2 = "goog";
@@ -66,7 +66,6 @@ begin
 	clear = '0;
 
 	//Reset Test Case
-	cb.n_rst <= 1'b1;
 	@cb; n_rst = 1'b0; @cb;
 	expected_data_out = '0;
 	expected_match = '0;

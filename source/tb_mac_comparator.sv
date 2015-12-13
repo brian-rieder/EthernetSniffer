@@ -56,7 +56,7 @@ endclocking
 
 initial
 begin
-	n_rst = 1'b1;
+	n_rst = 1'b0;
 	sample_data          = 32'hE5F60000; //E5:F6:00:00
         sample_data_2        = 32'h01B2C3D4; //01:B2:C3:D4
 	sample_data_shift1   = 32'hD4E5F600;
@@ -71,7 +71,7 @@ begin
 	clear                = '0;
 
 	//*******************Test Case 1: Reset*********************// 	
-	cb.n_rst <= 1'b1;
+	cb.n_rst <= 1'b0;
 	@cb; n_rst = 1'b0; 
 	@cb; expected_data_out = '0;
 	expected_match = '0;

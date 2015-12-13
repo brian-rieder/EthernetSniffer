@@ -84,6 +84,7 @@ endclocking
 initial
 begin
 	// Initializations
+	n_rst = 0;
 	sample_data = '0;
         sample_data_2 = '0;
 	sample_data_3 = '0;
@@ -109,7 +110,6 @@ begin
 	flagged_mac = 48'h641225eb1080; 
 
 	//*******************Test Case 0: Reset Test Case *********************//
-	cb.n_rst <= 1'b1;
 	@cb; cb.n_rst <= 1'b0; @cb; cb.n_rst <= 1'b1;
 	assert(expected_data_out == cb.datao)
 	else $error("1: Reset Test Case: Incorrect Data_Out");

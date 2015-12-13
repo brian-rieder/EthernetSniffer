@@ -45,13 +45,10 @@ initial
 begin
 
 	inc_addr = 0;
-	cb.n_rst <= 1'b1;
+	cb.n_rst <= 1'b0; //RESET
 
 	expected_addr_out = 32'h0000;
 	expected_write_enable = 0;
-
-	@cb; //RESET
-	cb.n_rst <= 1'b0;
 
 	@cb; @cb;
 	assert(expected_write_enable == cb.we)
