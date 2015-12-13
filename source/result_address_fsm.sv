@@ -12,7 +12,7 @@ module result_address_fsm
   // port declaration
   input wire clk,
   input wire n_rst,
-  input reg inc_addr,
+  input wire inc_addr,
   output reg [31:0] addr_out,
   output reg write_enable
 );
@@ -71,7 +71,7 @@ end
 always_ff @ (posedge clk, negedge n_rst) begin
   if (n_rst == 0) begin
     state <= ADDR1;
-    addr_out <= 32'b0;
+    addr_out <= '0;
     write_enable <= 1'b0;
   end else begin
     state <= nextstate;

@@ -15,7 +15,7 @@ module result_address_lookup
   output reg write_enable
 );
 
-reg [31:0] result_address_buffer [0:4] = {32'h0000, 32'h060E, 32'h0C1C, 32'h122A, 32'h1838};
+reg [31:0] result_address_buffer [0:4] = {32'h00000000, 32'h0000060E, 32'h00000C1C, 32'h0000122A, 32'h00001838};
 reg [2:0] counter_index = '0;
 reg next_write_enable;
 

@@ -3,7 +3,8 @@
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
-// Description: Test Bench for the Result Address FSM.
+// Description: Test Bench for the Result Address FSM. Checks for approrpriate transitioning
+// between states when signals are applied.
 
 `timescale 1ns/10ps
 
