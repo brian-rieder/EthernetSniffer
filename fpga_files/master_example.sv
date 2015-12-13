@@ -171,14 +171,14 @@ mii_pll	mii_pll_inst (
 //     .rx_rst_reset_n                              ()
 // );
 
-logic output_flag;
-logic [31:0] data_next;
-always_ff begin
-    if (output_flag) begin
-        LEDG[0] = 1;
-        display_data = data_next;
-    end
-end
+// logic output_flag;
+// logic [31:0] data_next;
+// always_ff begin
+//     if (output_flag) begin
+//         LEDG[0] = 1;
+//         display_data = data_next;
+//     end
+// end
 
 // ethernetsniffer TOP_LEVEL (
 //     .clk(),
@@ -259,8 +259,9 @@ assign ENET_MDIO = mdio_oen ? 1'bz : mdio_out;
     // .tx_rst_reset_n                              (),
     // .rx_clk_clk                                  (),
     // .rx_rst_reset_n                              ()
-    .debug_output_readdata                      (data_next),                      //               debug_output.readdata
-    .debug_output_writeresponsevalid_n          (output_flag)           //                           .writeresponsevalid_n
+    .debug_output_readdata                      (data_next),
+    .debug_output_writeresponsevalid_n          (output_flag),
+    .debug_output_display_data                  (display_data)
 );
  
  
