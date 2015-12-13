@@ -65,7 +65,7 @@ logic [DATAWIDTH-1:0] nextRead_data, read_data;
 logic [DATAWIDTH-1:0] nextData, wr_data;
 logic [NUMREGS-1:0][REGWIDTH-1:0] csr_registers;  		// Command and Status Registers (CSR) for custom logic 
 logic [NUMREGS-1:0] reg_index, nextRegIndex;
-typedef enum {IDLE, WRITE, WRITE_WAIT, READ_REQ, READ_WAIT, READ_ACK, READ_DATA} state_t;
+typedef enum {IDLE, RULES_ENTERED} state_t;
 state_t state, nextState;
 
 //assign wr_data = 32'hdeadbeef;
@@ -92,26 +92,29 @@ always_ff @ ( posedge clk ) begin
   	 end
 end
 
-ethernetsniffer TOP_LEVEL (
-  .clk(),
-  .n_rst(),
+always_comb begin
+
+
+end
+
+ethernetsniffer ESNIFF (
+  .clk(clk),
+  .n_rst(n_rst),
   .data_in(),
   .eop(),
   .empty(),
   .error(),
   .valid(),
-  .ready(),
   .sop(),
-  .rdempty(),
-  .flagged_port(),
-  .flagged_ip(),
-  .flagged_mac(),
-  .flagged_string(),
+  .flagged_port(csr_registers[2]),
+  .flagged_ip(csr_registers[0]),
+  .flagged_mac(csr_registers[1]),
+  .flagged_string(csr_registers[]),
   .update_done(),
+  .strlen(),
+  .ready(),
   .addr_out(),
   .write_enable(),
-  .addr_as(),
-  .rdreq(),
   .data_out(),
   .port_hits(),
   .ip_hits(),
@@ -120,5 +123,3 @@ ethernetsniffer TOP_LEVEL (
 );
 
 endmodule
-
-
