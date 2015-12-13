@@ -1,13 +1,14 @@
 // File name:   tb_result_address_fsm.sv
-// Updated:     19 November 2015
+// Updated:     12 November 2015
 // Authors:     Brian Rieder 
 //              Catie Cowden 
 //              Shaughan Gladden
-// Description: Test Bench for the Result Address FSM.
+// Description: Test Bench for the Result Address FSM. Checks for approrpriate transitioning
+// between states when signals are applied.
 
 `timescale 1ns/10ps
 
-module tb_result_address_lookup();
+module tb_result_address_fsm();
 
 reg inc_addr;
 reg [31:0] addr_out;
@@ -19,7 +20,7 @@ reg n_rst;
 reg [31:0] expected_addr_out;
 reg expected_write_enable;
 
-result_address_lookup RAL(.clk, .n_rst, .inc_addr, .addr_out, .write_enable);
+result_address_fsm RAF(.clk, .n_rst, .inc_addr, .addr_out, .write_enable);
 
 //CHECK THIS?
 localparam CLK_PERIOD = 10;
@@ -45,10 +46,13 @@ initial
 begin
 
 	inc_addr = 0;
-	cb.n_rst <= 1'b0; //RESET
+	cb.n_rst <= 1'b1;
 
 	expected_addr_out = 32'h0000;
 	expected_write_enable = 0;
+
+	@cb; //RESET
+	cb.n_rst <= 1'b0;
 
 	@cb; @cb;
 	assert(expected_write_enable == cb.we)
@@ -156,8 +160,7 @@ begin
 	assert(expected_addr_out == cb.ao)
 	else $error("1:9 ERROR: Addr Out is incorrect.");
 
-	//TO BE ADDED: TEST CASE SET 2. Change inc_addr value to verify functionality.
-
 	$stop;
+	//TO BE ADDED: TEST CASE SET 2. Change inc_addr value to verify functionality.
 end
 endmodule
