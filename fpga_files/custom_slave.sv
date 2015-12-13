@@ -75,6 +75,9 @@ state_t state, nextState;
 // BPR assignments
 reg [6299:0] live_data;
 reg [31:0] data_stream;
+reg [13:0] count, nextcount;
+reg sim_eop, sim_sop;
+reg next_eop, next_sop;
 
 //assign wr_data = 32'hdeadbeef;
 
@@ -110,10 +113,17 @@ always_comb begin
   endcase
 end
 
+always_comb begin
+  nextcount = 0;
+  if(state == PACKET_TRANSMISSION) begin
+    nextcount = count + 1;
+  end
+end
+
 always_ff @ (posedge clk, negedge n_rst) begin
   if(state == PACKET_TRANSMISSION) begin
-    data_stream <= live_data[6299:6295];
-    live_data <= live_data << 4;
+    count <= nextcount;
+    data_stream <= live_data[count*32+31 -: 31]; // -: 32?
   end
 end
 
@@ -121,12 +131,12 @@ ethernetsniffer ESNIFF (
   // inputs
   .clk(clk),
   .n_rst(n_rst),
-  .data_in(),
-  .eop(),
-  .empty(),
-  .error(),
-  .valid(),
-  .sop(),
+  .data_in(data_stream),
+  .eop(sim_eop),
+  .empty(0),
+  .error('0),
+  .valid(1),
+  .sop(sim_sop),
   .flagged_port(csr_registers[2]),
   .flagged_ip(csr_registers[0]),
   .flagged_mac(csr_registers[1]),
