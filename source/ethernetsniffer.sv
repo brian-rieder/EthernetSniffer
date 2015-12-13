@@ -24,7 +24,7 @@ input wire [4:0] strlen,
 output wire [31:0] addr_out,
 output wire write_enable,
 output wire [31:0] data_out,
-output reg [63:0] port_hits, ip_hits, mac_hits, url_hits);
+output reg [31:0] port_hits, ip_hits, mac_hits, url_hits);
 
 wire clear;
 wire url_match;
