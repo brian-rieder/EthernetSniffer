@@ -200,7 +200,11 @@ end
 //WEIGHTING
 always_comb begin
   next_weighted_match = 0;
-  wmatch = port_match + ip_match*2 + mac_match*2 + url_match*4;
+  // wmatch = port_match + ip_match*2 + mac_match*2 + url_match*4;
+  wmatch = port_match;
+  wmatch = wmatch + ip_match*2;
+  wmatch = wmatch + mac_match*2;
+  wmatch = wmatch + url_match*4;
   if(wmatch >= 4)begin
     next_weighted_match = 1;
   end
