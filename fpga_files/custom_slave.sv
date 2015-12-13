@@ -50,6 +50,10 @@ module custom_slave #(
   input logic sop_mac,
   input logic [5:0] error_mac,
 
+  // BPR: PCIe signals
+  input logic pcie_tx_data,
+  output logic pcie_rx_data,
+
   // output signals
   output logic [31:0] debug_data,
   output logic debug_sop
@@ -65,8 +69,12 @@ logic [DATAWIDTH-1:0] nextRead_data, read_data;
 logic [DATAWIDTH-1:0] nextData, wr_data;
 logic [NUMREGS-1:0][REGWIDTH-1:0] csr_registers;  		// Command and Status Registers (CSR) for custom logic 
 logic [NUMREGS-1:0] reg_index, nextRegIndex;
-typedef enum {IDLE, RULES_ENTERED} state_t;
+typedef enum {RULE_ENTERING, PACKET_TRANSMISSION} state_t;
 state_t state, nextState;
+
+// BPR assignments
+reg [6299:0] live_data;
+reg [31:0] data_stream;
 
 //assign wr_data = 32'hdeadbeef;
 
@@ -93,11 +101,24 @@ always_ff @ ( posedge clk ) begin
 end
 
 always_comb begin
+  nextState = state;
+  case(state) 
+    RULE_ENTERING: begin
+      if(csr_registers[5] == '1)
+        nextState = PACKET_TRANSMISSION;
+    end
+  endcase
+end
 
-
+always_ff @ (posedge clk, negedge n_rst) begin
+  if(state == PACKET_TRANSMISSION) begin
+    data_stream <= live_data[6299:6295];
+    live_data <= live_data << 4;
+  end
 end
 
 ethernetsniffer ESNIFF (
+  // inputs
   .clk(clk),
   .n_rst(n_rst),
   .data_in(),
@@ -109,9 +130,10 @@ ethernetsniffer ESNIFF (
   .flagged_port(csr_registers[2]),
   .flagged_ip(csr_registers[0]),
   .flagged_mac(csr_registers[1]),
-  .flagged_string(csr_registers[]),
+  .flagged_string(csr_registers[3]),
   .update_done(),
   .strlen(),
+  // outputs
   .ready(),
   .addr_out(),
   .write_enable(),
