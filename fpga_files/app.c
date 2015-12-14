@@ -103,6 +103,11 @@ void test32( PCIE_HANDLE hPCIe, DWORD addr )
 	  PCIE_Read32( hPCIe, pcie_bars[0], addr+16, &readVal);
 	  printf("Chosen packet: %u\t%u\n",testVal,readVal);
 
+	  printf("Enter '1' to continue...");
+	  scanf("%u",&testVal);
+	  bPass = PCIE_Write32( hPCIe, pcie_bars[0], addr+20, testVal);
+	  printf("Confirmation: 1");
+
 	  while(1) {}
 
 	 //  while(1) {
