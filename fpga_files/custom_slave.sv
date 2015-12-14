@@ -112,10 +112,13 @@ end
 
 always_comb begin
   nextState = state;
+  data_stream <= '0;
   case(state) 
     RULE_ENTERING: begin
       if(csr_registers[4] == '1)
         nextState = PACKET_TRANSMISSION;
+        data_stream <= 32'h13371337;
+        // data_stream <= csr_registers[4];
     end
   endcase
 end
@@ -130,11 +133,12 @@ end
 always_ff @ (posedge clk) begin
   if(state == PACKET_TRANSMISSION) begin
     count <= nextcount;
-    data_stream <= live_data[count*32+31 -: 31]; // -: 32?
+    // data_stream <= live_data[count*32+31 -: 31]; // -: 32?
+    // data_stream <= purdue_data[count*32+31 -: 31]; // -: 32?
   end
   else begin
     count <= '0;
-    data_stream <= 32'h12345678;
+    // data_stream <= 32'h12345678;
   end
 end
 

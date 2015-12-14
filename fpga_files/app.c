@@ -96,7 +96,7 @@ void test32( PCIE_HANDLE hPCIe, DWORD addr )
 	  PCIE_Read32( hPCIe, pcie_bars[0], addr+12, &readVal);
 	  printf("Flagged URL: %u\t%u\n",testVal,readVal);
 
-	  printf("Please choose a packet to transmit: 1) Purdue, 2) Wired, 3) ExtremeTech");
+	  printf("Please choose a packet to transmit (Purdue, Wired, ExtremeTech): ");
 	  scanf("%u",&testVal);
 	  // testVal = floatToDWORD(input,18);
 	  bPass = PCIE_Write32( hPCIe, pcie_bars[0], addr+16, testVal);
@@ -108,7 +108,13 @@ void test32( PCIE_HANDLE hPCIe, DWORD addr )
 	  bPass = PCIE_Write32( hPCIe, pcie_bars[0], addr+20, testVal);
 	  printf("Confirmation: 1");
 
-	  while(1) {}
+	  while(1) {
+	    PCIE_Read32( hPCIe, pcie_bars[0], addr+24, &readVal);
+	    if(readVal == 1) {
+	      printf("We're in PACKET_TRANSMISSION");
+          bPass = PCIE_Write32( hPCIe, pcie_bars[0], addr+24, 0);
+	    }
+	  }
 
 	 //  while(1) {
 		// PCIE_Read32( hPCIe, pcie_bars[0], addr+20, &readVal);
