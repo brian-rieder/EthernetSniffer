@@ -65,6 +65,7 @@ void test32( PCIE_HANDLE hPCIe, DWORD addr )
 	int testChar = 0;
 	printf("There's No Place Like 127.0.0.1: Ethernet Sniffer and Packet Flagger\n");
 	printf("Created by Brian Rieder, Catie Cowden, and Shaughan Gladden\n\n");
+    printf("Note that all inputs should be given in hexadecimal form.\n");
 	printf("------------------------------------------------------------\n\n");
 
 	while (testChar != 1) {
