@@ -65,12 +65,12 @@ begin
 	data_in              = '0;
 	flagged_ip           = 32'h0000;
 	clear                = '0;
+	expected_data_out = '0;
+	expected_match = '0;
 
 	//*******************Test Case 1: Reset*********************//
 	@cb; n_rst = 1'b0; 
 	@cb;
-	expected_data_out = '0;
-	expected_match = '0;
 	assert(expected_data_out == cb.datao)
 	else $error("1: Reset Test Case: Incorrect Data_Out");
 	assert(expected_match == cb.m)

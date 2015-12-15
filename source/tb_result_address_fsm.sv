@@ -46,7 +46,8 @@ initial
 begin
 
 	inc_addr = 0;
-	cb.n_rst <= 1'b1;
+	cb.n_rst <= 1'b0;
+	n_rst = 0;
 
 	expected_addr_out = 32'h0000;
 	expected_write_enable = 0;

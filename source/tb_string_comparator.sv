@@ -64,6 +64,8 @@ begin
 	data_in = '0;
 	flagged_string = "www.google.com";
 	clear = '0;
+	expected_data_out = '0;
+	expected_match = '0;
 
 	//Reset Test Case
 	@cb; n_rst = 1'b0; @cb;

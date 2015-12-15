@@ -69,6 +69,8 @@ begin
 	data_in              = 32'h0000;
 	flagged_mac          = 48'h01B2C3D4E5F6;
 	clear                = '0;
+	expected_data_out = '0;
+	expected_match = '0;
 
 	//*******************Test Case 1: Reset*********************// 	
 	cb.n_rst <= 1'b0;
@@ -86,8 +88,6 @@ begin
 
 	//*******************Test Case 2 No Shift*********************// 	
 	data_in = sample_data_2; 
-	expected_data_out = '0;
-	expected_match = '0;
 	@cb;
 	assert(expected_data_out == cb.datao)
 	else $error("2.1: No Shift: Incorrect Data_Out");
